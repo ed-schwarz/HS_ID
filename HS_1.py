@@ -95,6 +95,8 @@ def detect_fp(id1, id2):
     if(collections.Counter(id1) != collections.Counter(id2)):
         if(ran_ind):
             return True
+        else:
+            return False
     else:
         return False
 
@@ -115,7 +117,7 @@ def simulate(q, elements, size, ran):
     fp_SHA_array = []
     fp_RS_array = []
 
-    while(i <= elements):
+    while(i < elements):
         id1 = generate_encoded_id(ran, size, q)
         id2 = generate_encoded_id(ran, size, q)
 
