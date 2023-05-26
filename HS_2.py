@@ -201,7 +201,7 @@ class dummy_encoder:
 
         return prob
 
-
+#output a dict containing 2x2 probability matrixes, with (z, k) dimensions
 def prob_various(z_max, k_max):
     z = 1
     elements = 10000
