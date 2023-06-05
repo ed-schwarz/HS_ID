@@ -105,7 +105,8 @@ impl Encoder {
         let num_tags = match self.algorithm {
             Algorithm::ReedSalomon { .. } => (1usize << (self.symbol_size as usize * 8 - 1)) - 1,
             Algorithm::NoCode => self.num_symbols,
-            Algorithm::Sha1 | Algorithm::Sha2 => 1,
+            Algorithm::Sha1 => 5 * 4 / self.symbol_size as usize,
+            Algorithm::Sha2 => 7 * 4 / self.symbol_size as usize,
         };
         rand::seq::index::sample(&mut thread_rng(), num_tags, tags.min(num_tags))
             .iter()
