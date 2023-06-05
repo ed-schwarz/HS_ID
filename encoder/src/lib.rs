@@ -67,7 +67,12 @@ impl Encoder {
 
     pub fn generate(&mut self) {
         self.data1.try_fill(&mut rand::thread_rng()).unwrap();
-        self.data2.try_fill(&mut rand::thread_rng()).unwrap();
+        loop {
+            self.data2.try_fill(&mut rand::thread_rng()).unwrap();
+            if self.data1 != self.data2 {
+                break;
+            }
+        }
     }
 
     pub fn encode(&self, tags: usize) -> usize {
