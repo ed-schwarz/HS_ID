@@ -125,7 +125,7 @@ impl Encoder {
                 let id2 = encode_rs::<T>(self.data2_symbols(), cue);
                 id1 == id2
             }
-            Algorithm::NoCode => self.data1[cue] == self.data2[cue],
+            Algorithm::NoCode => self.data1_symbols::<T>()[cue] == self.data2_symbols::<T>()[cue],
             Algorithm::Sha1 => {
                 let id1 = Sha1::digest(self.data1_bytes());
                 let id2 = Sha1::digest(self.data2_bytes());
