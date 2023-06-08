@@ -97,8 +97,8 @@ impl Encoder {
             symbol_size,
             specialize,
             num_symbols,
-            data1: vec![0; data_size / 8 + (data_size % 8 != 0) as usize].into_boxed_slice(),
-            data2: vec![0; data_size / 8 + (data_size % 8 != 0) as usize].into_boxed_slice(),
+            data1: vec![0; data_size / 4 + (data_size % 4 != 0) as usize].into_boxed_slice(),
+            data2: vec![0; data_size / 4 + (data_size % 4 != 0) as usize].into_boxed_slice(),
         }
     }
     unsafe fn encode_inner<T: Field>(&self, tags: usize) -> usize {
@@ -143,25 +143,25 @@ impl Encoder {
     fn data1_bytes(&self) -> &[u8] {
         let ptr = self.data1.as_ptr() as *const u8;
         let len = self.data1.len();
-        unsafe { slice::from_raw_parts(ptr, len * 2) }
+        unsafe { slice::from_raw_parts(ptr, len * 4) }
     }
 
     fn data2_bytes(&self) -> &[u8] {
         let ptr = self.data2.as_ptr() as *const u8;
         let len = self.data2.len();
-        unsafe { slice::from_raw_parts(ptr, len * 2) }
+        unsafe { slice::from_raw_parts(ptr, len * 4) }
     }
 
     unsafe fn data1_symbols<T>(&self) -> &[T] {
         let ptr = self.data1.as_ptr() as *const T;
-        let len = (self.data1.len() * 8) / size_of::<T>();
-        unsafe { slice::from_raw_parts(ptr, len * 2) }
+        let len = (self.data1.len() * 4) / size_of::<T>();
+        unsafe { slice::from_raw_parts(ptr, len) }
     }
 
     unsafe fn data2_symbols<T>(&self) -> &[T] {
         let ptr = self.data2.as_ptr() as *const T;
-        let len = (self.data2.len() * 8) / size_of::<T>();
-        unsafe { slice::from_raw_parts(ptr, len * 2) }
+        let len = (self.data2.len() * 4) / size_of::<T>();
+        unsafe { slice::from_raw_parts(ptr, len) }
     }
 }
 
@@ -241,7 +241,7 @@ pub fn encode_rs32(data: &[u32], cue: usize) -> G2x32 {
     let mut res: G2x32Product = G2x32(data[0]).into();
     let initial_generator = G2x32::GENERATOR.pow(cue);
     let mut generator = initial_generator;
-    let mut lut = vec![generator; 1024.min(data.len() - 1)];
+    let mut lut = vec![generator; ((data.len() as f64).sqrt() as usize).clamp(4, 4096).min(data.len() - 1)];
     if !lut.is_empty() {
         for entry in &mut lut[1..] {
             *entry = generator.mul(initial_generator);
@@ -250,14 +250,12 @@ pub fn encode_rs32(data: &[u32], cue: usize) -> G2x32 {
         res = res.add(G2x32(data[1]).mul_(initial_generator));
         generator = initial_generator;
         for chunk in data[2..].chunks(lut.len()) {
+            let mut chunk_sum: G2x32Product = G2x32(0).into();
             for (&sym, &generator_pow) in chunk.iter().zip(&lut) {
-                if sym != 0 {
-                    res = res.add(G2x32(sym).mul2(generator, generator_pow))
-                }
+                chunk_sum = chunk_sum.add(G2x32(sym).mul_(generator_pow))
             }
-            if 1024 == lut.len() {
-                generator = generator.mul(lut[1023]);
-            }
+            res = res.add(chunk_sum.mul(generator.into()));
+            generator = generator.mul(*lut.last().unwrap());
         }
     }
     res.reduce()

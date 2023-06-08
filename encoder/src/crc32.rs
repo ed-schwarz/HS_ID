@@ -28,6 +28,12 @@ impl G2x32Product {
     pub fn add(self, other: Self) -> Self {
         unsafe { G2x32Product(arch::_mm_xor_si128(self.0, other.0)) }
     }
+    pub fn mul(self, other: Self) -> Self {
+        unsafe {
+            let res = arch::_mm_clmulepi64_si128(self.0, other.0, 0x00);
+            Self(res)
+        }
+    }
 }
 
 impl From<G2x32> for G2x32Product {
