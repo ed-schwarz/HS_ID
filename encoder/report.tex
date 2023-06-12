@@ -1,0 +1,354 @@
+% Options for packages loaded elsewhere
+\PassOptionsToPackage{unicode}{hyperref}
+\PassOptionsToPackage{hyphens}{url}
+%
+\documentclass[
+]{article}
+\author{}
+\date{}
+
+\usepackage{amsmath,amssymb}
+\usepackage{booktabs}
+\usepackage{lmodern}
+\usepackage{iftex}
+\usepackage{cleveref}
+\usepackage{siunitx}
+\ifPDFTeX
+  \usepackage[T1]{fontenc}
+  \usepackage[utf8]{inputenc}
+  \usepackage{textcomp} % provide euro and other symbols
+\else % if luatex or xetex
+  \usepackage{unicode-math}
+  \defaultfontfeatures{Scale=MatchLowercase}
+  \defaultfontfeatures[\rmfamily]{Ligatures=TeX,Scale=1}
+\fi
+% Use upquote if available, for straight quotes in verbatim environments
+\IfFileExists{upquote.sty}{\usepackage{upquote}}{}
+\IfFileExists{microtype.sty}{% use microtype if available
+  \usepackage[]{microtype}
+  \UseMicrotypeSet[protrusion]{basicmath} % disable protrusion for tt fonts
+}{}
+\makeatletter
+\@ifundefined{KOMAClassName}{% if non-KOMA class
+  \IfFileExists{parskip.sty}{%
+    \usepackage{parskip}
+  }{% else
+    \setlength{\parindent}{0pt}
+    \setlength{\parskip}{6pt plus 2pt minus 1pt}}
+}{% if KOMA class
+  \KOMAoptions{parskip=half}}
+\makeatother
+\usepackage{xcolor}
+\IfFileExists{xurl.sty}{\usepackage{xurl}}{} % add URL line breaks if available
+\IfFileExists{bookmark.sty}{\usepackage{bookmark}}{\usepackage{hyperref}}
+\hypersetup{
+  hidelinks,
+  pdfcreator={LaTeX via pandoc}}
+\urlstyle{same} % disable monospaced font for URLs
+\usepackage{color}
+\usepackage{fancyvrb}
+\newcommand{\VerbBar}{|}
+\newcommand{\VERB}{\Verb[commandchars=\\\{\}]}
+\DefineVerbatimEnvironment{Highlighting}{Verbatim}{commandchars=\\\{\}}
+% Add ',fontsize=\small' for more characters per line
+\newenvironment{Shaded}{}{}
+\newcommand{\AlertTok}[1]{\textcolor[rgb]{1.00,0.00,0.00}{\textbf{#1}}}
+\newcommand{\AnnotationTok}[1]{\textcolor[rgb]{0.38,0.63,0.69}{\textbf{\textit{#1}}}}
+\newcommand{\AttributeTok}[1]{\textcolor[rgb]{0.49,0.56,0.16}{#1}}
+\newcommand{\BaseNTok}[1]{\textcolor[rgb]{0.25,0.63,0.44}{#1}}
+\newcommand{\BuiltInTok}[1]{#1}
+\newcommand{\CharTok}[1]{\textcolor[rgb]{0.25,0.44,0.63}{#1}}
+\newcommand{\CommentTok}[1]{\textcolor[rgb]{0.38,0.63,0.69}{\textit{#1}}}
+\newcommand{\CommentVarTok}[1]{\textcolor[rgb]{0.38,0.63,0.69}{\textbf{\textit{#1}}}}
+\newcommand{\ConstantTok}[1]{\textcolor[rgb]{0.53,0.00,0.00}{#1}}
+\newcommand{\ControlFlowTok}[1]{\textcolor[rgb]{0.00,0.44,0.13}{\textbf{#1}}}
+\newcommand{\DataTypeTok}[1]{\textcolor[rgb]{0.56,0.13,0.00}{#1}}
+\newcommand{\DecValTok}[1]{\textcolor[rgb]{0.25,0.63,0.44}{#1}}
+\newcommand{\DocumentationTok}[1]{\textcolor[rgb]{0.73,0.13,0.13}{\textit{#1}}}
+\newcommand{\ErrorTok}[1]{\textcolor[rgb]{1.00,0.00,0.00}{\textbf{#1}}}
+\newcommand{\ExtensionTok}[1]{#1}
+\newcommand{\FloatTok}[1]{\textcolor[rgb]{0.25,0.63,0.44}{#1}}
+\newcommand{\FunctionTok}[1]{\textcolor[rgb]{0.02,0.16,0.49}{#1}}
+\newcommand{\ImportTok}[1]{#1}
+\newcommand{\InformationTok}[1]{\textcolor[rgb]{0.38,0.63,0.69}{\textbf{\textit{#1}}}}
+\newcommand{\KeywordTok}[1]{\textcolor[rgb]{0.00,0.44,0.13}{\textbf{#1}}}
+\newcommand{\NormalTok}[1]{#1}
+\newcommand{\OperatorTok}[1]{\textcolor[rgb]{0.40,0.40,0.40}{#1}}
+\newcommand{\OtherTok}[1]{\textcolor[rgb]{0.00,0.44,0.13}{#1}}
+\newcommand{\PreprocessorTok}[1]{\textcolor[rgb]{0.74,0.48,0.00}{#1}}
+\newcommand{\RegionMarkerTok}[1]{#1}
+\newcommand{\SpecialCharTok}[1]{\textcolor[rgb]{0.25,0.44,0.63}{#1}}
+\newcommand{\SpecialStringTok}[1]{\textcolor[rgb]{0.73,0.40,0.53}{#1}}
+\newcommand{\StringTok}[1]{\textcolor[rgb]{0.25,0.44,0.63}{#1}}
+\newcommand{\VariableTok}[1]{\textcolor[rgb]{0.10,0.09,0.49}{#1}}
+\newcommand{\VerbatimStringTok}[1]{\textcolor[rgb]{0.25,0.44,0.63}{#1}}
+\newcommand{\WarningTok}[1]{\textcolor[rgb]{0.38,0.63,0.69}{\textbf{\textit{#1}}}}
+\setlength{\emergencystretch}{3em} % prevent overfull lines
+\providecommand{\tightlist}{%
+  \setlength{\itemsep}{0pt}\setlength{\parskip}{0pt}}
+\setcounter{secnumdepth}{-\maxdimen} % remove section numbering
+\ifLuaTeX
+  \usepackage{selnolig}  % disable illegal ligatures
+\fi
+
+\begin{document}
+
+\hypertarget{encoder-implementation}{%
+\section{Encoder implementation}\label{encoder-implementation}}
+
+Existing literature CITE has developed reed-salomon (RS) codes as an ID
+code with great statistical properties. However, the encoding time of
+the surveyed RS implementations was prohibitively slow for practical
+applications. TODO RAW numbers. Especially compared to industry standard
+hashing functions such as SHA. Henceforth, an alternative encoder
+implementation is described which can reach much higher throughput.
+
+An RS encoder operates on a list of symbols \(s_i\). These symbols are
+elements of finite field \(s_i \in GF(n)\). The resulting RS code
+(usually) has \(n - 1\) symbols \(r_j\) that are obtained by multiplying
+each element with a power of the fields' generator \(a\). A generator
+\(a \in GF(n)\) is a finite field element whose powers
+\(a^i \quad 0 \le i \le n - 1\) are all unique. The symbols of the RS
+code can be calculated with
+
+\begin{equation}
+r_j = \sum_{i=0}^{n - 1} s_i a^{j i}.
+\end{equation}
+
+For an ID code only one (random) symbol needs to be computed.
+
+Existing literatures used prime fields for their RS-ID encoders. These
+are fields where \(n\) is a prime number. These fields are isomorphic to
+integers modulus \(n\): \(GF(n) \cong \mathbb{Z} / n\mathbb{Z}\).
+Therefore, multiplication is fairly fast as the CPU can just perform
+normal integer multiplication and calculate the remainder afterwards (so
+multiplication is only twice as slow as normal multiplication). However,
+computer memory is encoded as bytes. Converting that memory to prime
+field elements has time complexity of \(O(n^2)\) or \(O(n\sqrt(n))\)
+(with a high constant factor) depending on the implementation.
+
+\hypertarget{binary-extension-field-construction}{%
+\subsection{(Binary) Extension Field
+Construction}\label{binary-extension-field-construction}}
+
+Other established applications of RS encoding (and finite fields in
+general) such as RAID-6 therefore use (binary) extension fields instead.
+Extension fields are finite fields with the cardinality of a prime power
+\(n = p^z\). The elements of such a field are polynomials of degree
+\(z - 1\) with coefficients in its base prime field:
+
+\begin{equation}
+b = b_{z - 1} x^{z - 1} + .. + b_1 x + b_0 \quad b \in GF(p^z), b_i \in GF(p).
+\end{equation}
+
+Addition/Subtraction of polynomials is simply performed element wise.
+For binary extension fields in particular both addition and subtraction
+are equivalent to XOR CITE. Polynomial multiplication can create
+elements outside the finite field. For example:
+
+\begin{equation}
+x^{2z - 2} = x^{z - 1} x^{z - 1} \notin GF(p^z).
+\end{equation}
+
+To construct an extension field it is necessary to select an irreducible
+rank \(z\) polynomial \(P\). Similar to prime fields multiplication in
+the extension field is then defined as polynomial multiplication modulus
+\(P\). A field constructed this way retains all properties of prime
+fields.
+
+Binary extension fields (\(p = 2\)) are of particular interest because
+their elements can be represented by binary numbers of length \(z\). If
+z is a (power of two) multiple of 8 then symbols correspond to
+bytes/words which can be read directly from memory without additional
+overhead (and are well suited for processing with CPU instructions).
+
+\hypertarget{binary-extension-field-implementation}{%
+\subsection{Binary Extension Field
+Implementation}\label{binary-extension-field-implementation}}
+
+As previously mentioned addition and subtraction of binary extension
+fields can be implemented using a XOR. For small fields (GF(2\^{}8) and
+GF(2\^{}*16)) can be implemented using a lookup table (LUT). Here the
+g2p~\cite{g2p} library was used. However, such LUT based become impractically
+large for higher \(z\) (like $GF(2^{32})$).
+
+Efficient multiplication of 32bit finite fields can be implemented using
+carryless multiply instruction sets. These instructions are available on all amd64 CPUs releasec since 2011 and on all aarch64 CPUs. Carryless
+multiply (CLMU) instructions perform a simple polynomial multiplication
+(without a modulus) as described in \cref{binary-extension-field-construction}. The 32
+bit modulus of the resulting 64 bit polynomial can be computed by
+utilizing the CLMU instruction to perform a barrett reduction as
+described in~\cite{intel2008}. A practical
+implementation is slightly more involved as implementing the bit
+shuffling can be complex. An implementation for amd64 is shown below.
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\KeywordTok{unsafe} \KeywordTok{fn}\NormalTok{ baret\_reduce(x}\OperatorTok{:} \PreprocessorTok{arch::}\NormalTok{\_\_m128i) }\OperatorTok{{-}\textgreater{}} \DataTypeTok{u32} \OperatorTok{\{}
+    \KeywordTok{let}\NormalTok{ pu }\OperatorTok{=} \PreprocessorTok{arch::}\NormalTok{\_mm\_set\_epi64x(U\_PRIME}\OperatorTok{,}\NormalTok{ P\_X)}\OperatorTok{;}
+    \KeywordTok{let}\NormalTok{ t1 }\OperatorTok{=} \PreprocessorTok{arch::}\NormalTok{\_mm\_clmulepi64\_si128(}
+        \PreprocessorTok{arch::}\NormalTok{\_mm\_and\_si128(x}\OperatorTok{,} \PreprocessorTok{arch::}\NormalTok{\_mm\_set\_epi32(}\DecValTok{0}\OperatorTok{,} \DecValTok{0}\OperatorTok{,} \OperatorTok{!}\DecValTok{0}\OperatorTok{,} \DecValTok{0}\NormalTok{))}\OperatorTok{,}
+\NormalTok{        pu}\OperatorTok{,}
+        \DecValTok{0x10}\OperatorTok{,}
+\NormalTok{    )}\OperatorTok{;}
+    \KeywordTok{let}\NormalTok{ t2 }\OperatorTok{=} \PreprocessorTok{arch::}\NormalTok{\_mm\_clmulepi64\_si128(}
+        \PreprocessorTok{arch::}\NormalTok{\_mm\_and\_si128(t1}\OperatorTok{,} \PreprocessorTok{arch::}\NormalTok{\_mm\_set\_epi32(}\DecValTok{0}\OperatorTok{,} \OperatorTok{!}\DecValTok{0}\OperatorTok{,} \DecValTok{0}\OperatorTok{,} \DecValTok{0}\NormalTok{))}\OperatorTok{,}
+\NormalTok{        pu}\OperatorTok{,}
+        \DecValTok{0x01}\OperatorTok{,}
+\NormalTok{    )}\OperatorTok{;}
+
+    \KeywordTok{let}\NormalTok{ tmp }\OperatorTok{=} \PreprocessorTok{arch::}\NormalTok{\_mm\_extract\_epi32(t2}\OperatorTok{,} \DecValTok{0}\NormalTok{) }\KeywordTok{as} \DataTypeTok{u32}\OperatorTok{;}
+    \KeywordTok{let}\NormalTok{ x }\OperatorTok{=} \PreprocessorTok{arch::}\NormalTok{\_mm\_extract\_epi32(x}\OperatorTok{,} \DecValTok{0}\NormalTok{) }\KeywordTok{as} \DataTypeTok{u32}\OperatorTok{;}
+
+\NormalTok{    tmp }\OperatorTok{\^{}}\NormalTok{ x}
+\OperatorTok{\}}
+\end{Highlighting}
+\end{Shaded}
+
+Computing powers with repeated multiplication is extremely slow.
+Instead, the square-and-multiply implementation from the g2p library~\cite{g2p} is used. The performance of the implementation isn't critical as an
+efficient RS-ID encoder only needs to compute a single power (see \cref{simple-rs-id-encoder-implementation}).
+
+\hypertarget{simple-rs-id-encoder-implementation}{%
+\subsection{Simple RS-ID encoder
+implementation}\label{simple-rs-id-encoder-implementation}}
+
+For a binary extension field \(GF(2^z)\) where \(z=8*2^l\) the input
+symbols can simply directly read from memory (assuming its sufficiently
+aligned). If T is an integer with the size of the symbol then such a RS
+encoder can be implemented as follows (all arithmetic is performed in
+the finite field):
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\KeywordTok{pub} \KeywordTok{fn}\NormalTok{ encode\_rs(data}\OperatorTok{:} \OperatorTok{\&}\NormalTok{[T]}\OperatorTok{,}\NormalTok{ cue}\OperatorTok{:} \DataTypeTok{usize}\NormalTok{) }\OperatorTok{{-}\textgreater{}}\NormalTok{ T }\OperatorTok{\{}
+    \KeywordTok{if}\NormalTok{ data}\OperatorTok{.}\NormalTok{is\_empty() }\OperatorTok{\{}
+        \KeywordTok{return}\NormalTok{ zero()}\OperatorTok{;}
+    \OperatorTok{\}}
+    \KeywordTok{let} \KeywordTok{mut}\NormalTok{ res }\OperatorTok{=}\NormalTok{ data[}\DecValTok{0}\NormalTok{]}\OperatorTok{;}
+    \KeywordTok{let}\NormalTok{ initial\_generator }\OperatorTok{=}\NormalTok{ GENERATOR}\OperatorTok{.}\NormalTok{pow(cue)}\OperatorTok{;}
+    \KeywordTok{let} \KeywordTok{mut}\NormalTok{ generator }\OperatorTok{=}\NormalTok{ initial\_generator}\OperatorTok{;}
+    \KeywordTok{for}\NormalTok{ symbol }\KeywordTok{in}\NormalTok{ data[}\DecValTok{1}\OperatorTok{..}\NormalTok{] }\OperatorTok{\{}
+\NormalTok{        res }\OperatorTok{+=}\NormalTok{ generator }\OperatorTok{*}\NormalTok{ symbol}\OperatorTok{;}
+\NormalTok{        generator }\OperatorTok{*=}\NormalTok{ initial\_generator}\OperatorTok{;}
+    \OperatorTok{\}}
+\NormalTok{    res}
+\OperatorTok{\}}
+\end{Highlighting}
+\end{Shaded}
+
+Compared to a more naive implementation the input data is not zero
+padded. For the zero symbol \(s_i a^{j i} = 0\) always holds. The zero
+padded symbols therefore never contribute anything to the final sum.
+Furthermore, the generator power is not recomputed in each loop
+iteration. Instead, the generator power for the next iteration is
+calculated at the end of every iteration:
+\(a^{j (i + 1)} = a^{j i} a^{j}\). This optimization alone allowed a
+speedup by a factor of 20.
+
+\hypertarget{optimized-32-bit-rs-id-encoder-implementation}{%
+\subsection{Optimized 32 bit RS-ID encoder
+implementation}\label{optimized-32-bit-rs-id-encoder-implementation}}
+
+CPUs usually only implement a single 64 bit CLMU instruction with a 128
+bit output register. This fact can be used to optimize the 32 bit RS
+encoder even further. The barret reduction introduced in \ldots{}
+requires two CLMU instructions and many additional instructions for bit
+shuffling and is therefore much slower than the main CLMU.
+
+The additional register size is used to avoid most barret reductions. To
+that end the distributive and associative properties of the modulus
+operation are exploited:
+
+\begin{gather}
+\begin{gathered}
+(f \mod P) \otimes (g \mod P) \mod P = f \otimes (g \mod P) \mod P\\
+= (f \mod P) \otimes g \mod P = f \otimes g \mod P\\
+\end{gathered}\label{eq:modmul}\\
+\begin{gathered}
+(f \mod P) \oplus (g  \mod P) \mod P = f \oplus (g \mod P) \mod P\\
+ = (f \mod P) \oplus g \mod P = f \oplus g \mod P\label{eq:modsum}
+\end{gathered}
+\end{gather}
+
+Note that \eqref{eq:modmul} only holds on CPUs as long as the register s large enough
+to hold the result. That means that at most three 32bit elements can be
+multiplied before a reduction is necessary. However, an unlimited number
+of elements can be added without requiring reduction. Therefore, all
+products of the RS computation can be summed without performing a barret
+reduction. Only a single barret reduction of the final sum is necessary.
+
+However, the exponent of the generator \(a^{ji + 1} = a^{ji} a^j\) still
+requires a barret reduction for every element as the product would
+quickly exceed the register size. The cost of this barret reduction can
+be amortized by splitting input symbols into shards of
+length \(m\) that are encoded individually:
+
+\begin{gather}
+R_{j,k} = \sum_l^m a^{jl} s_{k*m+l}\\
+r_j = \sum_k^{n/m} R_{j,k} a^{jkm}.
+\end{gather}
+
+The coefficients \(a^{jl}\) can be precomputed and stored in a LUT at
+the start of the encoding. As a result the inner encoder loop only
+consists of a single CLMU instruction
+\footnote{and memory access to access symbols/LUT}. A barret reduction
+to calculate \(a^{jm(k + 1)} = a^{jkm} a^{jm}\) is only necessary every
+m instructions.
+
+Therefore, this optimized encoder only requires \(O(n + 4 n/m + m)\)
+CLMU instructions. Theoretically \(m = 2\sqrt{n}\) would result in
+minimal instruction count. However, measurements show no measurable
+differences for a sufficiently large LUT (4096 elements) at larger
+\(n\). The LUT size is therefore bounded to avoid (potentially
+significant) additional memory consumption. The final algorithm is shown
+below.
+\newpage
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\KeywordTok{pub} \KeywordTok{fn}\NormalTok{ encode\_rs(data}\OperatorTok{:} \OperatorTok{\&}\NormalTok{[}\DataTypeTok{u32}\NormalTok{]}\OperatorTok{,}\NormalTok{ cue}\OperatorTok{:} \DataTypeTok{usize}\NormalTok{) }\OperatorTok{{-}\textgreater{}}\NormalTok{ u32 }\OperatorTok{\{}
+    \KeywordTok{if}\NormalTok{ data}\OperatorTok{.}\NormalTok{is\_empty() }\OperatorToak{\{}
+        \KeywordTok{return}\DecValTok{ 0}\OperatorTok{;}
+    \OperatorTok{\}}
+    \KeywordTok{let} \KeywordTok{mut}\NormalTok{ res }\OperatorTok{=}\NormalTok{ data[}\DecValTok{0}\NormalTok{]}\OperatorTok{;}
+    \KeywordTok{let}\NormalTok{ initial\_generator }\OperatorTok{=} \NormalTok{GENERATOR}\OperatorTok{.}\NormalTok{pow(cue)}\OperatorTok{;}
+    \KeywordTok{let} \KeywordTok{mut}\NormalTok{ generator }\OperatorTok{=}\NormalTok{ initial\_generator}\OperatorTok{;}
+    \KeywordTok{let} \KeywordTok{mut}\NormalTok{ lut }\OperatorTok{=} \PreprocessorTok{vec!}\NormalTok{[generator}\OperatorTok{;}\NormalTok{ ((data}\OperatorTok{.}\NormalTok{len() }\KeywordTok{as} \DataTypeTok{f64}\NormalTok{)}\OperatorTok{.}\NormalTok{sqrt() }\KeywordTok{as} \DataTypeTok{usize}\NormalTok{)}\OperatorTok{.}\NormalTok{min(}\DecValTok{4096}\NormalTok{)}\NormalTok{]}\OperatorTok{;}
+    \KeywordTok{if} \OperatorTok{!}\NormalTok{lut}\OperatorTok{.}\NormalTok{is\_empty() }\OperatorTok{\{}
+        \KeywordTok{for}\NormalTok{ entry }\KeywordTok{in} \OperatorTok{\&}\KeywordTok{mut}\NormalTok{ lut[}\DecValTok{1}\OperatorTok{..}\NormalTok{] }\OperatorTok{\{}
+            \OperatorTok{*}\NormalTok{entry }\OperatorTok{=}\NormalTok{ generator}\OperatorTok{.}\NormalTok{mul(initial\_generator)}\OperatorTok{;}
+\NormalTok{            generator }\OperatorTok{=} \OperatorTok{*}\NormalTok{entry}\OperatorTok{;}
+        \OperatorTok{\}}
+\NormalTok{        res }\OperatorTok{+=}\NormalTok{ data[}\DecValTok{1}\NormalTok{] }\OperatorTok{*}\NormalTok{ initial\_generator}\OperatorTok{;}
+\NormalTok{        generator }\OperatorTok{=}\NormalTok{ initial\_generator}\OperatorTok{;}
+        \KeywordTok{for}\NormalTok{ chunk }\KeywordTok{in}\NormalTok{ data[}\DecValTok{2}\OperatorTok{..}\NormalTok{]}\OperatorTok{.}\NormalTok{chunks(lut}\OperatorTok{.}\NormalTok{len()) }\OperatorTok{\{}
+            \KeywordTok{let} \KeywordTok{mut}\NormalTok{ chunk\_sum }\OperatorTok{=} \DecValTok{0}\OperatorTok{;}
+            \KeywordTok{for}\NormalTok{ (}\OperatorTok{\&}\NormalTok{sym}\OperatorTok{,} \OperatorTok{\&}\NormalTok{generator\_pow) }\KeywordTok{in}\NormalTok{ chunk}\OperatorTok{.}\NormalTok{iter()}\OperatorTok{.}\NormalTok{zip(}\OperatorTok{\&}\NormalTok{lut) }\OperatorTok{\{}
+\NormalTok{                chunk\_sum }\OperatorTok{+=}\NormalTok{ sym }\OperatorTok{*}\NormalTok{ generator\_pow}\OperatorTok{;}
+            \OperatorTok{\}}
+\NormalTok{            res }\OperatorTok{+=}\NormalTok{ chunk\_sum }\OperatorTok{*}\NormalTok{ generator}\OperatorTok{;}
+\NormalTok{            generator }\OperatorTok{=}\NormalTok{ generator }\OperatorTok{*}\NormalTok{ (}\OperatorTok{*}\NormalTok{lut}\OperatorTok{.}\NormalTok{last()}\OperatorTok{.}\NormalTok{unwrap())}\OperatorTok{;}
+        \OperatorTok{\}}
+    \OperatorTok{\}}
+\NormalTok{    res}\OperatorTok{.}\NormalTok{reduce()}
+\OperatorTok{\}}
+\end{Highlighting}
+\end{Shaded}
+
+\newpage
+\section{Benchmarks}
+
+All measurements were performed on an AMD Ryzen 9 5950X Processor... TODO
+
+\begin{tabular}{*2l}    \toprule
+\emph{Encoder} & \emph{Troughput}  \\\midrule
+RS Simple $GF(2^{8})$ & $\SI{403}{MiB\per\second}$ \\ 
+RS Simple $GF(2^{16})$ & $\SI{255}{MiB\per\second}$ \\ 
+RS Simple $GF(2^{32})$ & $\SI{252}{MiB\per\second}$ \\ 
+RS Simple $GF(2^{64}$ & $\SI{346}{MiB\per\second}$ \\ 
+RS Optimized $GF(2^{32})$ & $\SI{1.75}{GiB\per\second}$ \\ 
+RS Optimized $GF(2^{64})$ & $\SI{3.42}{GiB\per\second}$ \\ 
+Sha 2 224bit & $\SI{2.25}{GiB\per\second}$ 
+\end{tabular}
+\end{document}

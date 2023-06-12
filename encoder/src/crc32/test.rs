@@ -1,7 +1,7 @@
 use g2p::G2Poly;
 use proptest::prelude::*;
 
-use crate::crc32::{G2x32, GENERATOR, ONE, P_X, ZERO};
+use crate::crc32::{G2x32, GENERATOR, ONE, P_X, U_PRIME, ZERO};
 use crate::Field;
 
 proptest! {
@@ -26,14 +26,6 @@ proptest! {
   }
 
   #[test]
-  fn mul2_acceleration(a: u32, b: u32, c:u32) {
-        let software_res1 =( G2Poly(a as u64) * G2Poly(b as u64))%G2Poly(P_X as u64);
-        let software_res =( software_res1 * G2Poly(c as u64))%G2Poly(P_X as u64);
-        let accelerated_res = G2x32(a).mul2(G2x32(b), G2x32(c)).reduce();
-        prop_assert_eq!(accelerated_res.0, software_res.0 as u32);
-  }
-
-  #[test]
   fn is_cylical(a in 1u32..u32::MAX) {
     let x = GENERATOR.pow(a as usize);
     prop_assert_eq!(x.pow((u32::MAX) as usize), ONE);
@@ -46,6 +38,7 @@ proptest! {
 fn polynom_correct() {
     let modulus = G2Poly(P_X as _);
     assert!(modulus.is_irreducible());
+    assert_eq!((G2Poly((P_X as u64) << 32) / modulus).0, U_PRIME as u64 as u32 as u64);
     let generator = G2Poly(GENERATOR.0 as u64);
     assert_eq!(generator.pow_mod(u32::MAX as u64, modulus), G2Poly::UNIT);
     assert_eq!(G2Poly(91283).pow_mod(u32::MAX as u64, modulus), G2Poly::UNIT)

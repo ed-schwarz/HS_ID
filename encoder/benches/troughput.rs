@@ -30,6 +30,15 @@ fn walk_benches(c: &mut Criterion) {
     let mut encoder: Encoder = Encoder::new(size, true, SymbolSize::G2x32, Algorithm::NoCode);
     encoder.generate();
     group.bench_function("No Code", move |b| b.iter(|| black_box(encoder.encode(1))));
+   group.throughput(criterion::Throughput::Bytes((size * 2 * 8).try_into().unwrap()));
+    let mut encoder: Encoder = Encoder::new(size, false, SymbolSize::G2x64, Algorithm::ReedSalomon);
+    encoder.generate();
+    group.bench_function("RS encode GF(2^64)", move |b| b.iter(|| black_box(encoder.encode(1))));
+    let mut encoder: Encoder = Encoder::new(size, true, SymbolSize::G2x64, Algorithm::ReedSalomon);
+    encoder.generate();
+    group.bench_function("RS encode fast GF(2^64)", move |b| {
+        b.iter(|| black_box(encoder.encode(1)))
+    });
 }
 
 criterion_group! {

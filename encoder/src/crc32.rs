@@ -5,9 +5,11 @@ mod test;
 
 const K6: i64 = 0x490D678D;
 const K5: i64 = 0xF200AA66;
+#[cfg(test)]
 const P_X: i64 = 0x104C11DB7;
 const U_PRIME: i64 = 0x104D101DF;
 
+#[cfg(test)]
 const GENERATOR: G2x32 = G2x32(1u32 << 31);
 #[cfg(test)]
 const ONE: G2x32 = G2x32(1);
@@ -42,14 +44,8 @@ impl From<G2x32> for G2x32Product {
     }
 }
 
-impl crate::Field for G2x32 {
-    type Data = u32;
-
-    const N: usize = u32::MAX as usize;
-
-    const GENERATOR: Self = GENERATOR;
-
-    fn pow(self, p: usize) -> Self {
+impl G2x32 {
+    pub fn pow(self, p: usize) -> Self {
         let mut val = 1;
         let mut pow_pos = 1 << (::std::mem::size_of::<u32>() * 8 - 1);
         // assert_eq!(pow_pos << 1, 0);
@@ -66,6 +62,12 @@ impl crate::Field for G2x32 {
         }
         Self(val)
     }
+}
+
+impl crate::Field for G2x32 {
+    type Data = u32;
+
+    const N: usize = u32::MAX as usize;
 
     fn mul(self, other: Self) -> Self {
         unsafe {
@@ -87,16 +89,6 @@ impl G2x32 {
     pub fn mul_(self, other: Self) -> G2x32Product {
         let res = unsafe { mul(self.0, other.0) };
         G2x32Product(res)
-    }
-
-    pub fn mul2(self, other1: Self, other2: Self) -> G2x32Product {
-        unsafe {
-            let arg = arch::_mm_set_epi32(0, self.0 as i32, 0, other1.0 as i32);
-            let res = arch::_mm_clmulepi64_si128(arg, arg, 0x10);
-            let arg = arch::_mm_insert_epi32(res, other2.0 as i32, 2);
-            let res = arch::_mm_clmulepi64_si128(arg, arg, 0x10);
-            G2x32Product(res)
-        }
     }
 }
 
@@ -141,7 +133,7 @@ unsafe fn reduce128(x: arch::__m128i) -> u32 {
 /// Perform a Barrett reduction from our now 64 bits to 32 bits as described in
 /// Fast CRC Computation for Generic Polynomials Using PCLMULQDQ Instruction
 unsafe fn baret_reduce(x: arch::__m128i) -> u32 {
-    let pu = arch::_mm_set_epi64x(U_PRIME, P_X);
+    let pu = arch::_mm_set_epi64x(U_PRIME, 0x04C11DB7);
     // T1(x) = ⌊(R(x) / x^32)⌋ • μ
     let t1 = arch::_mm_clmulepi64_si128(
         arch::_mm_and_si128(x, arch::_mm_set_epi32(0, 0, !0, 0)),
@@ -149,11 +141,7 @@ unsafe fn baret_reduce(x: arch::__m128i) -> u32 {
         0x10,
     );
     // T2(x) = ⌊(T1(x) / x^32)⌋ • P(x)
-    let t2 = arch::_mm_clmulepi64_si128(
-        arch::_mm_and_si128(t1, arch::_mm_set_epi32(0, !0, 0, 0)),
-        pu,
-        0x01,
-    );
+    let t2 = arch::_mm_clmulepi64_si128(t1, pu, 0x01);
 
     // C(x) = R(x) ^ T2(x) / x^32
     let tmp = arch::_mm_extract_epi32(t2, 0) as u32;
