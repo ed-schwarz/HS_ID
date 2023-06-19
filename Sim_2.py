@@ -580,6 +580,6 @@ class sim_FP:
 
     def thrp(self, k, z, t):
         cons = np.power(1024, 3)
-        thrp = k*z/(8*t*cons)
+        thrp = 2*k*z/(8*t*cons)
         return thrp
     
