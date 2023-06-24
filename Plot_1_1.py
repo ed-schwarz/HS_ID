@@ -86,7 +86,6 @@ class Plots:
         num_columns = prob_data_2D.shape[1]
         num_rows = prob_data_2D.shape[0]
 
-        #x_r = np.arange(num_rows) + 1
         x_r = np.array(self.convert_z_correct(z))
         x_c = np.arange(num_columns) + 1
 
@@ -801,100 +800,127 @@ class Plots:
 
         # return mean_prob # if needed for further actions
 
-    def plot_prob_multiple(self, data_rs, data_sha1, data_sha2, data_nc, plot_what):#
-        alg = self.alg
+    def plot_prob_multiple(self, data_rs, data_sha1, data_sha2, data_nc, plot_what):
         n = self.n
         z = self.z
         labels_k = self.convert_n_to_k(n)
         z_r = self.convert_z_correct(z)
         labels_q = self.convert_z_to_q(z_r)
-        title = ''
-        save1 = ''  # file name
-        save2 = ''
+        title = 'FP-Probability for RS, SHA1, SHA2 and NC'
+        save = ''  # file name
         fontdict = {'fontsize': 9}  # font size of titles
-        y_label = ''
+        y_label = 'FP-Probability'
+        y_calc = 0.04
+        label = 'Calculated FP-Probability'
 
         # if-clause for checking for equal dimensions
         num_rows = data_rs.shape[0]
         num_columns = data_rs.shape[1]
 
-        #x_r = np.arange(num_rows) + 1
         x_r = np.array(self.convert_z_correct(z))
         x_c = np.arange(num_columns) + 1
 
         if plot_what == 'z':
-            fig, ax = plt.subplots()
-            fig.suptitle(title, fontsize=14)
-
-            bar_width = 0.2 / num_rows
             for i in range(num_rows):
-                bar_position = x_c + i * bar_width
-                ax.bar(bar_position - bar_width, data_rs[i, :], width=0.9 * bar_width, label='RS')
-                ax.bar(bar_position, data_sha1[i, :], width=0.9 * bar_width, label='SHA1')
-                ax.bar(bar_position + bar_width, data_sha2[i, :], width=0.9 * bar_width, label='SHA2')
-                ax.bar(bar_position + 2 * bar_width, data_nc[i, :], width=0.9 * bar_width, label='NC')
+                fig, ax = plt.subplots()
+                fig.suptitle(title, fontsize=14)
+                bar_width = 0.2 / num_rows
+                ax.bar(x_c - bar_width, data_rs[i, :], width=0.9 * bar_width, label='RS')
+                ax.bar(x_c, data_sha1[i, :], width=0.9 * bar_width, label='SHA1')
+                ax.bar(x_c + bar_width, data_sha2[i, :], width=0.9 * bar_width, label='SHA2')
+                ax.bar(x_c + 2 * bar_width, data_nc[i, :], width=0.9 * bar_width, label='NC')
+                ax.axhline(y=y_calc, c='r', ls=':', label=label)
 
-            ax.set_title('FP-Probability-Graphs for different symbol sizes z', fontdict=fontdict)
-            ax.set_ylabel(y_label, fontsize=8)
-            ax.set_xlabel('Code length n', fontsize=8)
-            ax.grid()
-            ax.legend()
-            ax.set_xticks(x_c + (num_rows - 1) * bar_width / 2)
-            ax.set_xticklabels(x_c)
+                ax.set_title('FP-Probability for the symbol sizes z = {}'.format(x_r[i]), fontdict=fontdict)
+                ax.set_ylabel(y_label, fontsize=8)
+                ax.set_xlabel('n with k = 2^n', fontsize=8)
+                ax.grid()
+                ax.legend()
+                ax.set_xticks(x_c + (num_rows - 1) * bar_width / 2)
+                ax.set_xticklabels(x_c)
 
-            # plt.savefig(save1)
-            # np.save(save1, prob_data_2D)
-            plt.show()
+                save = 'plot_prob_multiple_all_z={}.png'.format(x_r[i])
+                plt.savefig(save)
+                plt.show()
+
+        # np.save(save, prob_data_2D)
 
         elif plot_what == 'q':
-            fig, ax = plt.subplots()
-            fig.suptitle(title, fontsize=14)
-
-            bar_width = 0.2 / num_rows
             for i in range(num_rows):
-                bar_position = x_c + i * bar_width
-                ax.bar(bar_position - bar_width, data_rs[i, :], width=0.9 * bar_width, label='RS')
-                ax.bar(bar_position, data_sha1[i, :], width=0.9 * bar_width, label='SHA1')
-                ax.bar(bar_position + bar_width, data_sha2[i, :], width=0.9 * bar_width, label='SHA2')
-                ax.bar(bar_position + 2 * bar_width, data_nc[i, :], width=0.9 * bar_width, label='NC')
+                fig, ax = plt.subplots()
+                fig.suptitle(title, fontsize=14)
+                bar_width = 0.2 / num_rows
+                ax.bar(x_c - bar_width, data_rs[i, :], width=0.9 * bar_width, label='RS')
+                ax.bar(x_c, data_sha1[i, :], width=0.9 * bar_width, label='SHA1')
+                ax.bar(x_c + bar_width, data_sha2[i, :], width=0.9 * bar_width, label='SHA2')
+                ax.bar(x_c + 2 * bar_width, data_nc[i, :], width=0.9 * bar_width, label='NC')
+                ax.axhline(y=y_calc, c='r', ls=':', label=label)
 
-            ax.set_title('FP-Probability-Graphs for different symbol sizes z', fontdict=fontdict)
-            ax.set_ylabel(y_label, fontsize=8)
-            ax.set_xlabel('Code word length k', fontsize=8)
-            ax.grid()
-            ax.legend()
-            ax.set_xticks(x_c + (num_rows - 1) * bar_width / 2)
-            ax.set_xticklabels(labels_k)
 
-            # plt.savefig(save1)
-            # np.save(save1, prob_data_2D)
-            plt.show()
+                ax.set_title('FP-Probability for q-ary basis q = 2^{}'.format(x_r[i]), fontdict=fontdict)
+                ax.set_ylabel(y_label, fontsize=8)
+                ax.set_xlabel('Code word length k', fontsize=8)
+                ax.grid()
+                ax.legend()
+                ax.set_xticks(x_c + (num_rows - 1) * bar_width / 2)
+                ax.set_xticklabels(['$2^{{{}}}$'.format(b) for b in x_c])  # = labels_k
 
-        # elif plot_what == 'n':
-        #     fig, ax = plt.subplots()
-        #     fig.suptitle(title, fontsize=14)
-        #
-        #     bar_width = 0.2 / num_columns
-        #     print(num_columns)
-        #     for j in range(num_columns):
-        #         bar_position = x_r + j * bar_width
-        #         ax.bar(bar_position - bar_width, data_rs[:, j], width=0.9 * bar_width, c='black', label='RS')
-        #         ax.bar(bar_position, data_sha1[:, j], width=0.9 * bar_width,  c='yellow', label='SHA1')
-        #         # ax.bar(bar_position + bar_width, data_sha2[:, j], width=0.9 * bar_width,  c='green', label='SHA2')
-        #         # ax.bar(bar_position + 2 * bar_width, data_nc[:, j], width=0.9 * bar_width, c='magenta', label='NC')
-        #
-        #     ax.set_title('FP-Probability-Graphs for different code lengths n', fontdict=fontdict)
-        #     ax.set_ylabel(y_label, fontsize=8)
-        #     ax.set_xlabel('Symbol size z', fontsize=8)
-        #     ax.grid()
-        #     ax.legend()
-        #     ax.set_xticks(x_r + (num_columns - 1) * bar_width / 2)
-        #     ax.set_xticklabels(x_r)
-        #
-        #     # plt.savefig(save2)
-        #     # np.save(save2, prob_data_2D)
-        #
-        #     plt.show()
+                save = 'plot_prob_multiple_all_q=2^{}.png'.format(x_r[i])
+                plt.savefig(save)
+                plt.show()
+
+        # np.save(save, prob_data_2D)
+
+        elif plot_what == 'n':
+            for j in range(num_columns):
+                fig, ax = plt.subplots()
+                fig.suptitle(title, fontsize=14)
+                bar_width = 0.8 / num_rows
+                ax.bar(x_r - bar_width, data_rs[:, j], width=0.9 * bar_width, label='RS')
+                ax.bar(x_r, data_sha1[:, j], width=0.9 * bar_width, label='SHA1')
+                ax.bar(x_r + bar_width, data_sha2[:, j], width=0.9 * bar_width, label='SHA2')
+                ax.bar(x_r + 2 * bar_width, data_nc[:, j], width=0.9 * bar_width, label='NC')
+                ax.axhline(y=y_calc, c='r', ls=':', label=label)
+
+                ax.set_title('FP-Probability for different code lengths n = {}'.format(x_c[j]), fontdict=fontdict)
+                ax.set_ylabel(y_label, fontsize=8)
+                ax.set_xlabel('Symbol size z', fontsize=8)
+                ax.grid()
+                ax.legend()
+                ax.set_xticks(x_r + (num_columns - 1) * bar_width / 2)
+                ax.set_xticklabels(x_r)
+
+                save = 'plot_prob_multiple_all_n={}.png'.format(x_c[j])
+                plt.savefig(save)
+                plt.show()
+
+            # np.save(save, prob_data_2D)
+
+        elif plot_what == 'k':
+            for j in range(num_columns):
+                fig, ax = plt.subplots()
+                fig.suptitle(title, fontsize=14)
+                bar_width = 0.8 / num_rows
+                ax.bar(x_r - bar_width, data_rs[:, j], width=0.9 * bar_width, label='RS')
+                ax.bar(x_r, data_sha1[:, j], width=0.9 * bar_width, label='SHA1')
+                ax.bar(x_r + bar_width, data_sha2[:, j], width=0.9 * bar_width, label='SHA2')
+                ax.bar(x_r + 2 * bar_width, data_nc[:, j], width=0.9 * bar_width, label='NC')
+                ax.axhline(y=y_calc, c='r', ls=':', label=label)
+
+                ax.set_title('FP-Probability for code word lengths k = 2^{}'.format(x_c[j]), fontdict=fontdict)
+                ax.set_ylabel(y_label, fontsize=8)
+                ax.set_xlabel('q-ary basis q', fontsize=8)
+                ax.grid()
+                ax.legend()
+                ax.set_xticks(x_r + (num_columns - 1) * bar_width / 2)
+                ax.set_xticklabels(['$2^{{{}}}$'.format(b) for b in x_r])
+
+                save = 'plot_prob_multiple_all_k=2^{}.png'.format(x_c[j])
+                plt.savefig(save)
+                plt.show()
+
+                # np.save(save, prob_data_2D)
+
 
     def boxplot_prob(self, prob_data_2D, plot_what):
         alg = self.alg
@@ -1105,6 +1131,7 @@ class Plots:
 
         x_r = np.array(self.convert_z_correct(z))
         x_c = np.arange(num_columns) + 1
+        bar_width = 0.5  # default width boxplot
 
         if plot_what == 'z':
             fig, ax = plt.subplots()
@@ -1182,5 +1209,290 @@ class Plots:
 
             # plt.savefig(save_k)
             # np.save(save_k, prob_data_2D)
+
+            plt.show()
+
+    def plot_prob_var(self, prob_data_2D, plot_what):
+        alg = self.alg
+        n = self.n
+        z = self.z
+        labels_k = self.convert_n_to_k(n)
+        z_r = self.convert_z_correct(z)
+        labels_q = self.convert_z_to_q(z_r)
+        title = ''
+        save_z = ''  # file name
+        save_n = ''
+        save_q = ''
+        save_k = ''
+        label = ''
+        fontdict = {'fontsize': 9}  # font size of titles
+        y_label = 'Variance'
+
+        prob_var_rows = np.zeros([z, n])
+        prob_var_cols = np.zeros([z, n])
+
+        if alg == 'rs':
+            prob_var_rows = np.var(prob_data_2D.T, axis=0)
+            prob_var_cols = np.var(prob_data_2D, axis=0)
+            title = 'Variance of FP-Probability of Reed Solomon'
+            save_z = 'RS_Prob_Var_SameZ_DiffN.png'
+            save_n = 'RS_Prob_Var_SameN_DiffZ.png'
+            save_q = 'RS_Prob_Var_SameQ_DiffK.png'
+            save_k = 'RS_Prob_Var_SameK_DiffQ.png'
+        elif alg == 'sha1':
+            prob_var_rows = np.var(prob_data_2D.T, axis=0)
+            prob_var_cols = np.var(prob_data_2D, axis=0)
+            title = 'Variance of FP-Probability of Sha1'
+            save_z = 'SHA1_Prob_Var_SameZ_DiffN.png'
+            save_n = 'SHA1_Prob_Var_SameN_DiffZ.png'
+            save_q = 'SHA1_Prob_Var_SameQ_DiffK.png'
+            save_k = 'SHA1_Prob_Var_SameK_DiffQ.png'
+        elif alg == 'sha2':
+            prob_var_rows = np.var(prob_data_2D.T, axis=0)
+            prob_var_cols = np.var(prob_data_2D, axis=0)
+            title = 'Variance of FP-Probability of Sha2'
+            save_z = 'NC_Prob_Var_SameZ_DiffN.png'
+            save_n = 'NC_Prob_Var_SameN_DiffZ.png'
+            save_q = 'NC_Prob_Var_SameQ_DiffK.png'
+            save_k = 'NC_Prob_Var_SameK_DiffQ.png'
+            label = 'Calculated FP-Probability SHA2'
+            y_calc = 0.004 #@Ed richtigen wert bitte einfügen
+        elif alg == 'nc':
+            prob_var_rows = np.var(prob_data_2D.T, axis=0)
+            prob_var_cols = np.var(prob_data_2D, axis=0)
+            title = 'Variance of FP-Probability of No Code'
+            save_z = 'NC_Prob_Var_SameZ_DiffN.png'
+            save_n = 'NC_Prob_Var_SameN_DiffZ.png'
+            save_q = 'NC_Prob_Var_SameQ_DiffK.png'
+            save_k = 'NC_Prob_Var_SameK_DiffQ.png'
+
+        num_columns = prob_data_2D.shape[1]
+        num_rows = prob_data_2D.shape[0]
+
+        x_r = np.array(self.convert_z_correct(z))
+        x_c = np.arange(num_columns) + 1
+
+        if plot_what == 'z':
+            fig, ax = plt.subplots()
+            fig.suptitle(title, fontsize=14)
+
+            bar_width = 0.8 / num_rows
+            for i in range(num_rows):
+                bar_position = x_c + i * bar_width
+                ax.bar(bar_position, prob_var_rows[i], width=bar_width, label='Var: z = {}'.format(x_r[i]))
+            ax.set_title('Variance for different symbol sizes z', fontdict=fontdict)
+            ax.set_ylabel(y_label, fontsize=8)
+            ax.set_xlabel('n with k = 2^n', fontsize=8)
+            ax.grid()
+            ax.legend()
+            ax.set_xticks(x_c + (num_rows - 1) * bar_width / 2)
+            ax.set_xticklabels(x_c)
+
+            # plt.savefig(save_z)
+            # np.save(save_z, prob_var_rows)
+            plt.show()
+
+
+        elif plot_what == 'q':
+            fig, ax = plt.subplots()
+            fig.suptitle(title, fontsize=14)
+
+            bar_width = 0.8 / num_rows
+            for i in range(num_rows):
+                bar_position = x_c + i * bar_width
+                ax.bar(bar_position, prob_var_rows[i], width=bar_width, label='q = 2^{}'.format(x_r[i]))
+            ax.set_title('Variance for different q-ary bases', fontdict=fontdict)
+            ax.set_ylabel(y_label, fontsize=8)
+            ax.set_xlabel('Code word length k', fontsize=8)
+            ax.grid()
+            ax.legend()
+            ax.set_xticks(x_c + (num_rows - 1) * bar_width / 2)
+            ax.set_xticklabels(['$2^{{{}}}$'.format(b) for b in x_c])  # = labels_k
+
+            # plt.savefig(save_q)
+            # np.save(save_q, prob_var_rows)
+            plt.show()
+
+        elif plot_what == 'n':
+            fig, ax = plt.subplots()
+            fig.suptitle(title, fontsize=14)
+
+            bar_width = 0.8 / num_columns
+            for j in range(num_columns):
+                bar_position = x_r + j * bar_width
+                ax.bar(bar_position, prob_var_cols[j], width=bar_width, label='n = {}'.format(j+1))
+            ax.set_title('Variance for different code lengths n', fontdict=fontdict)
+            ax.set_ylabel(y_label, fontsize=8)
+            ax.set_xlabel('Symbol size z', fontsize=8)
+            ax.grid()
+            ax.legend()
+            ax.set_xticks(x_r + (num_columns - 1) * bar_width / 2)
+            ax.set_xticklabels(x_r)
+
+            # plt.savefig(save_n)
+            # np.save(save_n, prob_var_cols)
+
+            plt.show()
+
+        elif plot_what == 'k':
+            fig, ax = plt.subplots()
+            fig.suptitle(title, fontsize=14)
+
+            bar_width = 0.8 / num_columns
+            for j in range(num_columns):
+                bar_position = x_r + j * bar_width
+                ax.bar(bar_position, prob_var_cols[j], width=bar_width, label='k = 2^{}'.format(j + 1))
+            ax.set_title('Variance for different code word lengths k', fontdict=fontdict)
+            ax.set_ylabel(y_label, fontsize=8)
+            ax.set_xlabel('q-ary basis q', fontsize=8)
+            ax.grid()
+            ax.legend()
+            ax.set_xticks(x_r + (num_columns - 1) * bar_width / 2)
+            ax.set_xticklabels(['$2^{{{}}}$'.format(b) for b in x_r])
+
+            # plt.savefig(save_k)
+            # np.save(save_k, prob_var_cols)
+
+            plt.show()
+
+    def plot_prob_std(self, prob_data_2D, plot_what):
+        alg = self.alg
+        n = self.n
+        z = self.z
+        labels_k = self.convert_n_to_k(n)
+        z_r = self.convert_z_correct(z)
+        labels_q = self.convert_z_to_q(z_r)
+        title = ''
+        save_z = ''  # file name
+        save_n = ''
+        save_q = ''
+        save_k = ''
+        label = ''
+        fontdict = {'fontsize': 9}  # font size of titles
+        y_label = 'Standard Deviation'
+        prob_std_rows = np.zeros([z, n])
+        prob_std_cols = np.zeros([z, n])
+
+        if alg == 'rs':
+            title = 'Standard Deviation of FP-Probability of Reed Solomon'
+            prob_std_rows = np.std(prob_data_2D.T, axis=0)
+            prob_std_cols = np.std(prob_data_2D, axis=0)
+            save_z = 'RS_Prob_Std_SameZ_DiffN.png'
+            save_n = 'RS_Prob_Std_SameN_DiffZ.png'
+            save_q = 'RS_Prob_Std_SameQ_DiffK.png'
+            save_k = 'RS_Prob_Std_SameK_DiffQ.png'
+        elif alg == 'sha1':
+            title = 'Standard Deviation of FP-Probability of Sha1'
+            prob_std_rows = np.std(prob_data_2D.T, axis=0)
+            prob_std_cols = np.std(prob_data_2D, axis=0)
+            save_z = 'SHA1_Prob_Std_SameZ_DiffN.png'
+            save_n = 'SHA1_Prob_Std_SameN_DiffZ.png'
+            save_q = 'SHA1_Prob_Std_SameQ_DiffK.png'
+            save_k = 'SHA1_Prob_Std_SameK_DiffQ.png'
+        elif alg == 'sha2':
+            title = 'Standard Deviation of FP-Probability of Sha2'
+            prob_std_rows = np.std(prob_data_2D.T, axis=0)
+            prob_std_cols = np.std(prob_data_2D, axis=0)
+            save_z = 'SHA2_Prob_Std_SameZ_DiffN.png'
+            save_n = 'SHA2_Prob_Std_SameN_DiffZ.png'
+            save_q = 'SHA2_Prob_Std_SameQ_DiffK.png'
+            save_k = 'SHA2_Prob_Std_SameK_DiffQ.png'
+        elif alg == 'nc':
+            title = 'Standard Deviation of FP-Probability of No Code'
+            prob_std_rows = np.std(prob_data_2D.T, axis=0)
+            prob_std_cols = np.std(prob_data_2D, axis=0)
+            save_z = 'NC_Prob_Std_SameZ_DiffN.png'
+            save_n = 'NC_Prob_Std_SameN_DiffZ.png'
+            save_q = 'NC_Prob_Std_SameQ_DiffK.png'
+            save_k = 'NC_Prob_Std_SameK_DiffQ.png'
+
+        num_columns = prob_data_2D.shape[1]
+        num_rows = prob_data_2D.shape[0]
+
+        x_r = np.array(self.convert_z_correct(z))
+        x_c = np.arange(num_columns) + 1
+
+        if plot_what == 'z':
+            # Standard Deviation
+            fig, ax = plt.subplots()
+            fig.suptitle(title, fontsize=14)
+
+            bar_width = 0.8 / num_rows
+            print('rows_std: {}'.format(prob_std_rows))
+
+            for i in range(num_rows):
+                bar_position = x_c + i * bar_width
+                ax.bar(bar_position, prob_std_rows[i], width=bar_width, label='Std: z = {}'.format(x_r[i]))
+            ax.set_title('Standard Deviation for different symbol sizes z', fontdict=fontdict)
+            ax.set_ylabel(y_label, fontsize=8)
+            ax.set_xlabel('n with k = 2^n', fontsize=8)
+            ax.grid()
+            ax.legend()
+            ax.set_xticks(x_c + (num_rows - 1) * bar_width / 2)
+            ax.set_xticklabels(x_c)
+
+            # plt.savefig(save_z)
+            # np.save(save_z, prob_std_rows)
+            plt.show()
+
+        elif plot_what == 'q':
+            fig, ax = plt.subplots()
+            fig.suptitle(title, fontsize=14)
+
+            bar_width = 0.8 / num_rows
+            for i in range(num_rows):
+                bar_position = x_c + i * bar_width
+                ax.bar(bar_position, prob_std_rows[i], width=bar_width, label='q = 2^{}'.format(x_r[i]))
+            ax.set_title('Standard Deviation for different q-ary bases', fontdict=fontdict)
+            ax.set_ylabel(y_label, fontsize=8)
+            ax.set_xlabel('Code word length k', fontsize=8)
+            ax.grid()
+            ax.legend()
+            ax.set_xticks(x_c + (num_rows - 1) * bar_width / 2)
+            ax.set_xticklabels(['$2^{{{}}}$'.format(b) for b in x_c])  # = labels_k
+
+            # plt.savefig(save_q)
+            # np.save(save_q, prob_std_rows)
+            plt.show()
+
+        elif plot_what == 'n':
+            fig, ax = plt.subplots()
+            fig.suptitle(title, fontsize=14)
+
+            bar_width = 0.8 / num_columns
+            for j in range(num_columns):
+                bar_position = x_r + j * bar_width
+                ax.bar(bar_position, prob_std_cols[j], width=bar_width, label='n = {}'.format(j+1))
+            ax.set_title('Standard Deviation for different code lengths n', fontdict=fontdict)
+            ax.set_ylabel(y_label, fontsize=8)
+            ax.set_xlabel('Symbol size z', fontsize=8)
+            ax.grid()
+            ax.legend()
+            ax.set_xticks(x_r + (num_columns - 1) * bar_width / 2)
+            ax.set_xticklabels(x_r)
+
+            # plt.savefig(save_n)
+            # np.save(save_n, prob_std_cols)
+
+            plt.show()
+
+        elif plot_what == 'k':
+            fig, ax = plt.subplots()
+            fig.suptitle(title, fontsize=14)
+
+            bar_width = 0.8 / num_columns
+            for j in range(num_columns):
+                bar_position = x_r + j * bar_width
+                ax.bar(bar_position, prob_std_cols[j], width=bar_width, label='k = 2^{}'.format(j + 1))
+            ax.set_title('Standard Deviation for different code word lengths k', fontdict=fontdict)
+            ax.set_ylabel(y_label, fontsize=8)
+            ax.set_xlabel('q-ary basis q', fontsize=8)
+            ax.grid()
+            ax.legend()
+            ax.set_xticks(x_r + (num_columns - 1) * bar_width / 2)
+            ax.set_xticklabels(['$2^{{{}}}$'.format(b) for b in x_r])
+
+            # plt.savefig(save_k)
+            # np.save(save_k, prob_std_cols)
 
             plt.show()
