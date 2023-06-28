@@ -1,0 +1,199 @@
+\begin{tikzpicture}
+\pgfplotsset{every axis/.append style={ultra thick},compat=1.5}\definecolor{mycolor0}{rgb}{0.00000, 0.39216, 0.00000}
+\definecolor{mycolor1}{rgb}{0.00000, 0.00000, 0.54510}
+\definecolor{mycolor2}{rgb}{0.69020, 0.18824, 0.37647}
+\definecolor{mycolor3}{rgb}{1.00000, 0.00000, 0.00000}
+\definecolor{mycolor4}{rgb}{0.58039, 0.40392, 0.74118}
+\definecolor{mycolor5}{rgb}{0.87059, 0.72157, 0.52941}
+\definecolor{mycolor6}{rgb}{0.00000, 1.00000, 0.00000}
+\definecolor{mycolor7}{rgb}{0.00000, 1.00000, 1.00000}
+\definecolor{mycolor8}{rgb}{1.00000, 0.00000, 1.00000}
+\definecolor{mycolor9}{rgb}{0.39216, 0.58431, 0.92941}
+    \begin{axis}[
+        xlabel=$\mathrm{message size}\quad\left(KiB\right)$,
+        ylabel=$standard deviation\quad\quad\left(\si{\micro\second}\right)$,
+        width=0.99*\textwidth,
+        xmajorgrids,
+        enlargelimits=false,
+        scaled ticks=true,
+        ymajorgrids,
+        log basis x=2,
+        xmode=log,
+        x tick style={color=black},
+        y tick style={color=black},
+        ymode=log,
+        x grid style={white!69.01960784313725!black},
+        y grid style={white!69.01960784313725!black},
+        legend style={at={(0.02,0.98)}, anchor=north west,legend cell align=left, align=left},
+]
+\addplot[
+        smooth,
+        mark=diamond,
+        color=mycolor0,
+    ] plot coordinates {
+            (1,1.64305)
+        (2,3.29604)
+        (4,6.66578)
+        (8,13.42416)
+        (16,27.04653)
+        (32,53.59396)
+        (64,107.71159)
+        (128,216.97769)
+        (256,431.05438)
+        (512,859.46286)
+        (1024,1704.02760)
+        (2048,3407.52702)
+        (4096,6697.89500)
+        (8192,13744.89314)
+        (16384,26924.79770)
+
+    };
+    \addlegendentry{RS 8}
+    \addplot[
+        smooth,
+        mark=diamond,
+        dashed,
+        color=mycolor1,
+    ] plot coordinates {
+            (1,0.72356)
+        (2,1.50358)
+        (4,3.17781)
+        (8,6.84917)
+        (16,13.14705)
+        (32,27.23173)
+        (64,53.42111)
+        (128,109.63277)
+        (256,211.50810)
+        (512,455.55236)
+        (1024,826.25997)
+        (2048,1451.40683)
+        (4096,3212.25626)
+        (8192,6757.65181)
+        (16384,12531.38377)
+
+    };
+    \addlegendentry{RS 16}
+    \addplot[
+        smooth,
+        mark=diamond,
+        dotted,
+        color=mycolor2,
+    ] plot coordinates {
+            (1,0.03616)
+        (2,0.07140)
+        (4,0.10165)
+        (8,0.59303)
+        (16,0.46559)
+        (32,1.06972)
+        (64,0.60633)
+        (128,6.07127)
+        (256,6.57666)
+        (512,3.26110)
+        (1024,24.62322)
+        (2048,20.28439)
+        (4096,81.75853)
+        (8192,109.90583)
+        (16384,179.81963)
+
+    };
+    \addlegendentry{RS 32}
+    \addplot[
+        smooth,
+        mark=diamond,
+        solid,
+        color=mycolor3,
+    ] plot coordinates {
+            (1,0.04096)
+        (2,0.07717)
+        (4,0.24294)
+        (8,0.46103)
+        (16,0.65129)
+        (32,1.18662)
+        (64,1.43872)
+        (128,4.61606)
+        (256,3.22151)
+        (512,12.10471)
+        (1024,20.13524)
+        (2048,10.18716)
+        (4096,34.35261)
+        (8192,68.85330)
+        (16384,172.05282)
+
+    };
+    \addlegendentry{RS 64}
+    \addplot[
+        smooth,
+        mark=diamond,
+        dashed,
+        color=mycolor4,
+    ] plot coordinates {
+            (1,0.01060)
+        (2,0.01439)
+        (4,0.03573)
+        (8,0.06895)
+        (16,0.09750)
+        (32,0.20639)
+        (64,0.34530)
+        (128,0.57816)
+        (256,0.99852)
+        (512,1.43079)
+        (1024,1.71639)
+        (2048,8.66373)
+        (4096,20.91269)
+        (8192,11.99794)
+        (16384,13.27155)
+
+    };
+    \addlegendentry{RS 32 optimized}
+    \addplot[
+        smooth,
+        mark=diamond,
+        dotted,
+        color=mycolor5,
+    ] plot coordinates {
+            (1,0.01335)
+        (2,0.01758)
+        (4,0.02928)
+        (8,0.04728)
+        (16,0.04366)
+        (32,0.14249)
+        (64,0.22168)
+        (128,0.34375)
+        (256,0.59938)
+        (512,0.82183)
+        (1024,1.26600)
+        (2048,5.55672)
+        (4096,12.17414)
+        (8192,5.42795)
+        (16384,28.10881)
+
+    };
+    \addlegendentry{RS 64 optimized}
+    \addplot[
+        smooth,
+        mark=diamond,
+        solid,
+        color=mycolor6,
+    ] plot coordinates {
+            (1,0.01136)
+        (2,0.01271)
+        (4,0.03207)
+        (8,0.04650)
+        (16,0.06917)
+        (32,0.30791)
+        (64,0.64978)
+        (128,0.71403)
+        (256,2.24559)
+        (512,2.40309)
+        (1024,7.29453)
+        (2048,7.24790)
+        (4096,20.76392)
+        (8192,39.79086)
+        (16384,19.11556)
+
+    };
+    \addlegendentry{Sha224}
+     
+    \end{axis}
+    \end{tikzpicture}       
+    

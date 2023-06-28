@@ -17,8 +17,10 @@ sha1 = { version = "0.10.5", features = ["asm"] }
 sha2 = { version = "0.10.6", features = ["asm"] }
 
 [dev-dependencies]
-criterion = "0.4.0"
+dactyl = "0.5.*"
+criterion = {version = "0.5.1", features=["html_reports"]}
 proptest = "1.2.0"
+csv = "1.2.2"
 
 [profile.bench]
 debug = true
