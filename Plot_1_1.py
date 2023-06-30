@@ -822,6 +822,10 @@ class Plots:
 
         if plot_what == 'z':
             for i in range(num_rows):
+                data_rs = np.multiply(data_rs, 10)
+                data_sha1 = np.multiply(data_sha1, 10)
+                data_sha2 = np.multiply(data_sha2, 10)
+                data_nc = np.multiply(data_nc, 10)
                 fig, ax = plt.subplots()
                 fig.suptitle(title, fontsize=14)
                 bar_width = 0.2 / num_rows
@@ -922,7 +926,7 @@ class Plots:
                 # np.save(save, prob_data_2D)
 
 
-    def boxplot_prob(self, prob_data_2D, plot_what):
+    def boxplot_prob(self, prob_data_3D, plot_what):
         alg = self.alg
         n = self.n
         z = self.z
@@ -971,92 +975,133 @@ class Plots:
             label = 'Calculated FP-Probability NC'
             y_calc = 0.004 #@Ed richtigen wert bitte einfügen
 
-        num_columns = prob_data_2D.shape[1]
+        num_rows = prob_data_3D.shape[0]
+        num_columns = prob_data_3D.shape[1]
+        num_elements = prob_data_3D.shape[2]
 
         x_r = np.array(self.convert_z_correct(z))
         x_c = np.arange(num_columns) + 1
 
         if plot_what == 'z':
-            fig, ax = plt.subplots()
-            fig.suptitle(title, fontsize=14)
+            arr2D = np.zeros([num_columns, num_elements])
+            for i in range(num_rows):
+                for j in range(num_columns):
+                    for k in range(num_elements):
+                        arr2D[j, k] = prob_data_3D[i, j, k]
+                        print("i = {ay}, j = {jay}, k = {kay}".format(ay=i, jay=j, kay=k))
 
-            ax.boxplot(prob_data_2D, patch_artist=True,
-                showmeans=False, showfliers=False,
-                medianprops={"color": "red", "linewidth": 0.5},
-                boxprops={"facecolor": "C0", "edgecolor": "white",
-                          "linewidth": 0.5},
-                whiskerprops={"color": "C0", "linewidth": 1.5},
-                capprops={"color": "C0", "linewidth": 1.5})
-            
-            ax.axhline(y=y_calc, c='r', ls=':', label=label)
-            subtitle = 'FP-Probability for different symbol sizes z = ' + ', '.join(['{}'.format(b) for b in x_r])
-            ax.set_title(subtitle, fontdict=fontdict)
-            ax.set_ylabel(y_label, fontsize=8)
-            ax.set_xlabel('n with k = 2^n', fontsize=8)
-            ax.grid()
-            ax.legend()
-            ax.set_xticklabels(x_c)
+                fig, ax = plt.subplots()
+                fig.suptitle(title, fontsize=14)
 
-            # plt.savefig(save_z)
-            # np.save(save_z, prob_data_2D)
-            plt.show()
+                ax.boxplot(arr2D.T, patch_artist=True,
+                    showmeans=False, showfliers=False,
+                    medianprops={"color": "red", "linewidth": 0.5},
+                    boxprops={"facecolor": "C0", "edgecolor": "white",
+                              "linewidth": 0.5},
+                    whiskerprops={"color": "C0", "linewidth": 1.5},
+                    capprops={"color": "C0", "linewidth": 1.5})
+
+                #ax.axhline(y=y_calc, c='r', ls=':', label=label)
+                subtitle = 'FP-Probability for different symbol sizes z = ' + ', '.join(['{}'.format(x_r[i])])
+                ax.set_title(subtitle, fontdict=fontdict)
+                ax.set_ylabel(y_label, fontsize=8)
+                ax.set_xlabel('n with k = 2^n', fontsize=8)
+                ax.set_ylim(0, 0.0125)
+                ax.grid()
+                #ax.legend()
+                ax.set_xticklabels(x_c)
+
+                # plt.savefig(save_z)
+                # np.save(save_z, prob_data_2D)
+                plt.show()
+                print('Boxplot plotted for i = {}'.format(i))
+
+
+                # plt.savefig(save_z)
+                # np.save(save_z, prob_data_2D)
+                plt.show()
 
         elif plot_what == 'q':
-            fig, ax = plt.subplots()
-            fig.suptitle(title, fontsize=14)
+            arr2D = np.zeros([num_columns, num_elements])
+            for i in range(num_rows):
+                for j in range(num_columns):
+                    for k in range(num_elements):
+                        arr2D[j, k] = prob_data_3D[i, j, k]
+                        print("i = {ay}, j = {jay}, k = {kay}".format(ay=i, jay=j, kay=k))
 
-            ax.boxplot(prob_data_2D, patch_artist=True,
-                       showmeans=False, showfliers=False,
-                       medianprops={"color": "red", "linewidth": 0.5},
-                       boxprops={"facecolor": "C0", "edgecolor": "white",
-                                 "linewidth": 0.5},
-                       whiskerprops={"color": "C0", "linewidth": 1.5},
-                       capprops={"color": "C0", "linewidth": 1.5})
+                fig, ax = plt.subplots()
+                fig.suptitle(title, fontsize=14)
 
-            ax.axhline(y=y_calc, c='r', ls=':', label=label)
-            suptitel = 'FP-Probability for different q-ary bases q = ' + ', '.join(['2^{}'.format(b) for b in x_r])
-            ax.set_title(suptitel, fontdict=fontdict)
-            ax.set_ylabel(y_label, fontsize=8)
-            ax.set_xlabel('Code word length k', fontsize=8)
-            ax.grid()
-            ax.legend()
-            ax.set_xticklabels(['$2^{{{}}}$'.format(b) for b in x_c])  # = labels_k
+                ax.boxplot(arr2D.T, patch_artist=True,
+                           showmeans=False, showfliers=False,
+                           medianprops={"color": "red", "linewidth": 0.5},
+                           boxprops={"facecolor": "C0", "edgecolor": "white",
+                                     "linewidth": 0.5},
+                           whiskerprops={"color": "C0", "linewidth": 1.5},
+                           capprops={"color": "C0", "linewidth": 1.5})
 
-            # plt.savefig(save_q)
-            # np.save(save_q, prob_data_2D)
-            plt.show()
+                #ax.axhline(y=y_calc, c='r', ls=':', label=label)
+                suptitel = 'FP-Probability for different q-ary bases q = ' + ', '.join(['2^{}'.format(b) for b in x_r])
+                ax.set_title(suptitel, fontdict=fontdict)
+                ax.set_ylabel(y_label, fontsize=8)
+                ax.set_xlabel('Code word length k', fontsize=8)
+                ax.set_ylim(0, 0.0125)
+                ax.grid()
+                #ax.legend()
+                ax.set_xticklabels(['$2^{{{}}}$'.format(b) for b in x_c])  # = labels_k
+
+                # plt.savefig(save_q)
+                # np.save(save_q, prob_data_2D)
+                plt.show()
+                print('Boxplot plotted for i = {}'.format(i))
 
         elif plot_what == 'n':
-            fig, ax = plt.subplots()
-            fig.suptitle(title, fontsize=14)
+            arr2D = np.zeros([num_rows, num_elements])
+            for i in range(num_columns):
+                for j in range(num_rows):
+                    for k in range(num_elements):
+                        arr2D[j, k] = prob_data_3D[j, i, k]
+                        print("i = {ay}, j = {jay}, k = {kay}".format(ay=i, jay=j, kay=k))
 
-            ax.boxplot(prob_data_2D.T, patch_artist=True,
-                       showmeans=False, showfliers=False,
-                       medianprops={"color": "red", "linewidth": 0.5},
-                       boxprops={"facecolor": "C0", "edgecolor": "white",
-                                 "linewidth": 0.5},
-                       whiskerprops={"color": "C0", "linewidth": 1.5},
-                       capprops={"color": "C0", "linewidth": 1.5})
+                fig, ax = plt.subplots()
+                fig.suptitle(title, fontsize=14)
 
-            ax.axhline(y=y_calc, c='r', ls=':', label=label)
-            subtitle = 'FP-Probability for different n = ' + ', '.join(['{}'.format(b) for b in x_c])
-            ax.set_title(subtitle, fontdict=fontdict)
-            ax.set_ylabel(y_label, fontsize=8)
-            ax.set_xlabel('Symbol size z', fontsize=8)
-            ax.grid()
-            ax.legend()
-            ax.set_xticklabels(x_r)
+                ax.boxplot(arr2D.T, patch_artist=True,
+                           showmeans=False, showfliers=False,
+                           medianprops={"color": "red", "linewidth": 0.5},
+                           boxprops={"facecolor": "C0", "edgecolor": "white",
+                                     "linewidth": 0.5},
+                           whiskerprops={"color": "C0", "linewidth": 1.5},
+                           capprops={"color": "C0", "linewidth": 1.5})
 
-            # plt.savefig(save_n)
-            # np.save(save_n, prob_data_2D)
+                #ax.axhline(y=y_calc, c='r', ls=':', label=label)
+                subtitle = 'FP-Probability for different n = ' + ', '.join(['{}'.format(b) for b in x_c])
+                ax.set_title(subtitle, fontdict=fontdict)
+                ax.set_ylabel(y_label, fontsize=8)
+                ax.set_xlabel('Symbol size z', fontsize=8)
+                ax.set_ylim(0, 0.0125)
+                ax.grid()
+                #ax.legend()
+                ax.set_xticklabels(x_r)
 
-            plt.show()
+                # plt.savefig(save_n)
+                # np.save(save_n, prob_data_2D)
+                plt.show()
+                print('Boxplot plotted for i = {}'.format(i))
+
 
         elif plot_what == 'k':
+            arr2D = np.zeros([num_rows, num_elements])
+            for i in range(num_columns):
+                for j in range(num_rows):
+                    for k in range(num_elements):
+                        arr2D[j, k] = prob_data_3D[j, i, k]
+                        print("i = {ay}, j = {jay}, k = {kay}".format(ay=i, jay=j, kay=k))
+
             fig, ax = plt.subplots()
             fig.suptitle(title, fontsize=14)
 
-            ax.boxplot(prob_data_2D.T, patch_artist=True,
+            ax.boxplot(arr2D.T, patch_artist=True,
                        showmeans=False, showfliers=False,
                        medianprops={"color": "red", "linewidth": 0.5},
                        boxprops={"facecolor": "C0", "edgecolor": "white",
@@ -1064,19 +1109,149 @@ class Plots:
                        whiskerprops={"color": "C0", "linewidth": 1.5},
                        capprops={"color": "C0", "linewidth": 1.5})
 
-            ax.axhline(y=y_calc, c='r', ls=':', label=label)
+            #ax.axhline(y=y_calc, c='r', ls=':', label=label)
             subtitle = "FP-Probability for different code word lengths k = " + ', '.join(['2^{}'.format(b) for b in x_c])
             ax.set_title(subtitle, fontdict=fontdict)
             ax.set_ylabel(y_label, fontsize=8)
             ax.set_xlabel('q-ary basis q', fontsize=8)
+            ax.set_ylim(0, 0.0125)
             ax.grid()
-            ax.legend()
+            #ax.legend()
             ax.set_xticklabels(['$2^{{{}}}$'.format(b) for b in x_r])
 
             # plt.savefig(save_k)
             # np.save(save_k, prob_data_2D)
-
             plt.show()
+            print('Boxplot plotted for i = {}'.format(i))
+
+    def bp_violinplot_prob_1D(self, prob_data_1D, z_i, n_i): #z_i, n_i used for generating 1D-Array
+        #z_i equals 8, 16, 32. NOT Index in z*n-Array
+
+        alg = self.alg
+        #n = self.n
+        #z = self.z
+        #labels_k = self.convert_n_to_k(n_i)
+        z_r = self.convert_z_correct(z_i)  # convert index into actual z value
+        z = z_r[0]
+        #labels_q = self.convert_z_to_q(z_r)
+        title = 'z = {z}, n = {n}'.format(z=z, n=n_i)
+        label_calc = 'FP_avg_calc =  1/q = 1/(2^z)'
+        y_label = 'FP-Probability'
+        y_calc = 1 / np.power(2, z)
+
+        if alg == 'rs':
+            print('RS Average: {}'.format(np.average(prob_data_1D[0, :])))
+            fig, ax = plt.subplots()
+            fig.suptitle('Boxplot FP-Probability of RS')
+            ax.boxplot(prob_data_1D[0, :], patch_artist=True,
+                       showmeans=False, showfliers=False,
+                       medianprops={"color": "red", "linewidth": 0.5},
+                       boxprops={"facecolor": "C0", "edgecolor": "white",
+                                 "linewidth": 0.5},
+                       whiskerprops={"color": "C0", "linewidth": 1.5},
+                       capprops={"color": "C0", "linewidth": 1.5})
+            ax.set_title(title)
+            ax.axhline(y=y_calc, c='r', ls=':', label=label_calc)
+            ax.set_ylabel(y_label)
+            ax.legend()
+            ax.grid()
+            plt.show()
+
+            fig, ax = plt.subplots()
+            fig.suptitle('Violinplot FP-Probability of RS')
+            ax.violinplot(prob_data_1D[0, :], showmeans=True, showmedians=False, showextrema=False)
+            ax.set_title(title)
+            ax.axhline(y=y_calc, c='r', ls=':', label=label_calc)
+            ax.set_ylabel(y_label)
+            ax.legend()
+            ax.grid()
+            plt.show()
+
+        elif alg == 'sha1':
+            print('Sha1 Average: {}'.format(np.average(prob_data_1D[0, :])))
+            fig, ax = plt.subplots()
+            fig.suptitle('Boxplot FP-Probability of Sha1')
+            ax.boxplot(prob_data_1D[0, :], patch_artist=True,
+                       showmeans=False, showfliers=False,
+                       medianprops={"color": "red", "linewidth": 0.5},
+                       boxprops={"facecolor": "C0", "edgecolor": "white",
+                                 "linewidth": 0.5},
+                       whiskerprops={"color": "C0", "linewidth": 1.5},
+                       capprops={"color": "C0", "linewidth": 1.5})
+            ax.set_title(title)
+            ax.axhline(y=y_calc, c='r', ls=':', label=label_calc)
+            ax.set_ylabel(y_label)
+            ax.legend()
+            ax.grid()
+            plt.show()
+
+            fig, ax = plt.subplots()
+            fig.suptitle('Violinplot FP-Probability of Sha1')
+            ax.violinplot(prob_data_1D[0, :], showmeans=True, showmedians=False, showextrema=False)
+            ax.set_title(title)
+            ax.axhline(y=y_calc, c='r', ls=':', label=label_calc)
+            ax.set_ylabel(y_label)
+            ax.legend()
+            ax.grid()
+            plt.show()
+
+        elif alg == 'sha2':
+            print('Sha2 Average: {}'.format(np.average(prob_data_1D[0, :])))
+            fig, ax = plt.subplots()
+            fig.suptitle('Boxplot FP-Probability of Sha2')
+            ax.set_title(title)
+            ax.boxplot(prob_data_1D[0, :], patch_artist=True,
+                       showmeans=False, showfliers=False,
+                       medianprops={"color": "red", "linewidth": 0.5},
+                       boxprops={"facecolor": "C0", "edgecolor": "white",
+                                 "linewidth": 0.5},
+                       whiskerprops={"color": "C0", "linewidth": 1.5},
+                       capprops={"color": "C0", "linewidth": 1.5})
+            ax.axhline(y=y_calc, c='r', ls=':', label=label_calc)
+            ax.set_ylabel(y_label)
+            ax.legend()
+            ax.grid()
+            plt.show()
+
+            fig, ax = plt.subplots()
+            fig.suptitle('Violinplot FP-Probability of Sha2')
+            ax.violinplot(prob_data_1D[0, :], showmeans=True, showmedians=False, showextrema=False)
+            ax.set_title(title)
+            ax.axhline(y=y_calc, c='r', ls=':', label=label_calc)
+            ax.set_ylabel(y_label)
+            ax.legend()
+            ax.grid()
+            plt.show()
+
+        elif alg == 'nc':
+            print('NC Average: {}'.format(np.average(prob_data_1D[0, :])))
+            fig, ax = plt.subplots()
+            fig.suptitle('Boxplot FP-Probability of NC')
+            ax.set_title(title)
+            ax.boxplot(prob_data_1D[0, :], patch_artist=True,
+                       showmeans=False, showfliers=False,
+                       medianprops={"color": "red", "linewidth": 0.5},
+                       boxprops={"facecolor": "C0", "edgecolor": "white",
+                                 "linewidth": 0.5},
+                       whiskerprops={"color": "C0", "linewidth": 1.5},
+                       capprops={"color": "C0", "linewidth": 1.5})
+            ax.axhline(y=y_calc, c='r', ls=':', label=label_calc)
+            ax.set_ylabel(y_label)
+            ax.legend()
+            ax.grid()
+            plt.show()
+
+            fig, ax = plt.subplots()
+            fig.suptitle('Boxplot FP-Probability of NC')
+            ax.set_title(title)
+            ax.violinplot(prob_data_1D[0, :], showmeans=True, showmedians=False, showextrema=False)
+            ax.axhline(y=y_calc, c='r', ls=':', label=label_calc)
+            ax.set_ylabel(y_label)
+            ax.legend()
+            ax.grid()
+            plt.show()
+
+        print('Plots done')
 
     def violinplot_prob(self, prob_data_2D, plot_what):
         alg = self.alg
@@ -1136,10 +1311,11 @@ class Plots:
         if plot_what == 'z':
             fig, ax = plt.subplots()
             fig.suptitle(title, fontsize=14)
+            ax.violinplot(prob_data_2D[0, :], showmeans=True, showmedians=False, showextrema=False)
 
-            ax.violinplot(prob_data_2D, showmeans=True, showmedians=False, showextrema=True)
-
-            ax.axhline(y=y_calc, c='r', ls=':', label=label)
+            # ax.violinplot(prob_data_2D, showmeans=True, showmedians=False, showextrema=True)
+            #
+            # ax.axhline(y=y_calc, c='r', ls=':', label=label)
             subtitle = 'FP-Probability for different symbol sizes z = ' + ', '.join(['{}'.format(b) for b in x_r])
             ax.set_title(subtitle, fontdict=fontdict)
             ax.set_ylabel(y_label, fontsize=8)
