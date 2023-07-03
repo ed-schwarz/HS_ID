@@ -18,7 +18,6 @@ class Plots:
     def convert_n_to_k(self, n_max):
         return np.array([np.power(2, i + 1) for i in range(n_max)])
 
-
     def convert_z_to_q(self, z):
         return np.array([np.power(2, i) for i in z])
 
@@ -56,38 +55,34 @@ class Plots:
             save_n = 'RS_Prob_SameN_DiffZ.png'
             save_q = 'RS_Prob_SameQ_DiffK.png'
             save_k = 'RS_Prob_SameK_DiffQ.png'
-            label = 'Calculated FP-Probability RS'
-            y_calc = 0.004 #@Ed richtigen wert bitte einfügen
+
         elif alg == 'sha1':
             title = 'FP-Probability of Sha1'
             save_z = 'SHA1_Prob_SameZ_DiffN.png'
             save_n = 'SHA1_Prob_SameN_DiffZ.png'
             save_q = 'SHA1_Prob_SameQ_DiffK.png'
             save_k = 'SHA1_Prob_SameK_DiffQ.png'
-            label = 'Calculated FP-Probability SHA1'
-            y_calc = 0.004 #@Ed richtigen wert bitte einfügen
         elif alg == 'sha2':
             title = 'FP-Probability of Sha2'
             save_z = 'SHA2_Prob_SameZ_DiffN.png'
             save_n = 'SHA2_Prob_SameN_DiffZ.png'
             save_q = 'SHA2_Prob_SameQ_DiffK.png'
             save_k = 'SHA2_Prob_SameK_DiffQ.png'
-            label = 'Calculated FP-Probability SHA2'
-            y_calc = 0.004 #@Ed richtigen wert bitte einfügen
         elif alg == 'nc':
             title = 'FP-Probability of No Code'
             save_z = 'NC_Prob_SameZ_DiffN.png'
             save_n = 'NC_Prob_SameN_DiffZ.png'
             save_q = 'NC_Prob_SameQ_DiffK.png'
             save_k = 'NC_Prob_SameK_DiffQ.png'
-            label = 'Calculated FP-Probability NC'
-            y_calc = 0.004 #@Ed richtigen wert bitte einfügen
 
-        num_columns = prob_data_2D.shape[1]
         num_rows = prob_data_2D.shape[0]
+        num_columns = prob_data_2D.shape[1]
 
         x_r = np.array(self.convert_z_correct(z))
         x_c = np.arange(num_columns) + 1
+
+        y_calc = np.array([1 / np.power(2, i) for i in x_r]) # calculated average false positive probability (1/q)
+        label = 'Calculated FP-Probability for z = {}'.format(x_r[0]) # just z=8 relvant, others just return a value close to zero
 
         if plot_what == 'z':
             fig, ax = plt.subplots()
@@ -104,7 +99,7 @@ class Plots:
                 ax.bar(bar_position, prob_data_2D[plot_how_many, :], width=bar_width, label='z = {}'.format(x_r[plot_how_many]))
                 ax.set_title('FP-Probability for symbol size z = {}'.format(x_r[plot_how_many]), fontdict=fontdict)
 
-            ax.axhline(y=y_calc, c='r', ls=':', label=label)  # dotted line = calculated FP-Average
+            ax.axhline(y=y_calc[0], c='r', ls=':', label=label)  # dotted line = calculated FP-Average
             ax.set_ylabel(y_label, fontsize=8)
             ax.set_xlabel('n with k = 2^n', fontsize=8)
             ax.grid()
@@ -132,7 +127,7 @@ class Plots:
                        label='q = 2^{}'.format(x_r[plot_how_many]))
                 ax.set_title('FP-Probability for q-ary basis q = 2^{}'.format(x_r[plot_how_many]), fontdict=fontdict)
 
-            ax.axhline(y=y_calc, c='r', ls=':', label=label)
+            ax.axhline(y=y_calc[0], c='r', ls=':', label=label)
             ax.set_ylabel(y_label, fontsize=8)
             ax.set_xlabel('Code word length k', fontsize=8)
             ax.grid()
@@ -159,7 +154,7 @@ class Plots:
                 ax.bar(bar_position, prob_data_2D[:, plot_how_many], width=6 * bar_width, label='n = {}'.format(plot_how_many))
                 ax.set_title('FP-Probability for code length n = {}'.format(plot_how_many), fontdict=fontdict)
 
-            ax.axhline(y=y_calc, c='r', ls=':', label=label)
+            ax.axhline(y=y_calc[0], c='r', ls=':', label=label)
             ax.set_ylabel(y_label, fontsize=8)
             ax.set_xlabel('Symbol size z', fontsize=8)
             ax.grid()
@@ -187,7 +182,7 @@ class Plots:
                 ax.bar(bar_position, prob_data_2D[:, plot_how_many], width=6 * bar_width, label='k = 2^{}'.format(plot_how_many + 1))
                 ax.set_title('FP-Probability for code word lengths k = 2^{}'.format(plot_how_many + 1), fontdict=fontdict)
 
-            ax.axhline(y=y_calc, c='r', ls=':', label=label)
+            ax.axhline(y=y_calc[0], c='r', ls=':', label=label)
             ax.set_ylabel(y_label, fontsize=8)
             ax.set_xlabel('q-ary basis q', fontsize=8)
             ax.grid()
@@ -441,7 +436,7 @@ class Plots:
             if plot_how_many == 'all':
                 for i in range(num_rows):
                     bar_position = x_cpos + i * bar_width
-                    ax.bar(bar_position, prob_data_2D[i, :], width=0.9*bar_width, label='q = 2^{}'.format(x_r[i]))
+                    ax.bar(bar_position, prob_data_2D[i, :], width=bar_width, label='q = 2^{}'.format(x_r[i]))
                 ax.set_title('Calculation Thrpt for different q-ary bases', fontdict=fontdict)
             else:  # plot q for a single k
                 bar_position = x_c + (num_rows - 1) * bar_width / 2
@@ -647,159 +642,6 @@ class Plots:
 
             plt.show()
 
-    def plot_mean(self, prob_data_2D, plot_what):
-        alg = self.alg
-        n = self.n
-        z = self.z
-        labels_k = self.convert_n_to_k(n)
-        z_r = self.convert_z_correct(z)
-        labels_q = self.convert_z_to_q(z_r)
-        title = ''
-        save_z = ''  # file name
-        save_n = ''
-        save_q = ''
-        save_k = ''
-        label = ''
-        fontdict = {'fontsize': 9}  # font size of titles
-        y_label = 'Average FP-Probability'
-
-        if alg == 'rs':
-            title = 'Average FP-Probability of Reed Solomon'
-            save_z = 'RS_Prob_SameZ_DiffN.png'
-            save_n = 'RS_Prob_SameN_DiffZ.png'
-            save_q = 'RS_Prob_SameQ_DiffK.png'
-            save_k = 'RS_Prob_SameK_DiffQ.png'
-            label = 'Calculated FP-Probability RS'
-            y_calc = 0.004  # @Ed richtigen wert bitte einfügen
-        elif alg == 'sha1':
-            title = 'Average FP-Probability of Sha1'
-            save_z = 'SHA1_Prob_SameZ_DiffN.png'
-            save_n = 'SHA1_Prob_SameN_DiffZ.png'
-            save_q = 'SHA1_Prob_SameQ_DiffK.png'
-            save_k = 'SHA1_Prob_SameK_DiffQ.png'
-            label = 'Calculated FP-Probability SHA1'
-            y_calc = 0.004  # @Ed richtigen wert bitte einfügen
-        elif alg == 'sha2':
-            title = 'Average FP-Probability of Sha2'
-            save_z = 'SHA2_Prob_SameZ_DiffN.png'
-            save_n = 'SHA2_Prob_SameN_DiffZ.png'
-            save_q = 'SHA2_Prob_SameQ_DiffK.png'
-            save_k = 'SHA2_Prob_SameK_DiffQ.png'
-            label = 'Calculated FP-Probability SHA2'
-            y_calc = 0.004  # @Ed richtigen wert bitte einfügen
-        elif alg == 'nc':
-            title = 'Average FP-Probability of No Code'
-            save_z = 'NC_Prob_SameZ_DiffN.png'
-            save_n = 'NC_Prob_SameN_DiffZ.png'
-            save_q = 'NC_Prob_SameQ_DiffK.png'
-            save_k = 'NC_Prob_SameK_DiffQ.png'
-            label = 'Calculated FP-Probability NC'
-            y_calc = 0.004  # @Ed richtigen wert bitte einfügen
-
-        num_rows = prob_data_2D.shape[0]
-        num_columns = prob_data_2D.shape[1]
-
-        mean_c = []
-        mean_r = []
-
-        for k in range(num_columns):
-            sum = 0
-            for l in range(num_rows):
-                sum += prob_data_2D[l][k]
-            mean = sum / num_columns
-            mean_r.append(mean)
-
-        for m in range(num_rows):
-            sum = 0
-            for n in range(num_columns):
-                sum += prob_data_2D[m][n]
-            mean = sum / num_rows
-            mean_c.append(mean)
-
-        x_r = np.arange(len(mean_r)) + 1
-        x_c = np.arange(len(mean_c)) + 1
-
-        # avg_r = np.array(mean_r)
-        # avg_c = np.array(mean_c)
-        # num_col_c = avg_c[0]
-        # num_col_r = avg_r[0]
-        # x_r = np.arange(num_col_r) + 1
-        # x_c = np.arange(num_col_c) + 1
-
-        if plot_what == 'n':
-            fig, ax = plt.subplots()
-            fig.suptitle(title, fontsize=14)
-
-            bar_width = 0.8 / x_c
-            ax.bar(x_r, mean_r, width=0.9*bar_width)
-            ax.axhline(y=y_calc, c='r', ls=':', label=label)
-            ax.grid()
-            ax.set_title('Average FP-Probability of different code lengths n', fontdict=fontdict)
-            ax.set_ylabel(y_label, fontsize=8)
-            ax.set_xlabel('Code length n', fontsize=8)
-            ax.legend()
-
-            # plt.savefig(save_n)
-            # np.save(save_n, prob_data_2D)
-            plt.show()
-
-        elif plot_what == 'k':
-            fig, ax = plt.subplots()
-            fig.suptitle(title, fontsize=14)
-
-            bar_width = 0.8 / x_c
-            ax.bar(x_r, mean_r, width=0.9*bar_width)
-            ax.axhline(y=y_calc, c='r', ls=':', label=label)
-            ax.grid()
-            ax.set_title('Average FP-Probability of different code word lengths k', fontdict=fontdict)
-            ax.set_ylabel(y_label, fontsize=8)
-            ax.set_xlabel('Code word length k', fontsize=8)
-            ax.legend()
-
-            # plt.savefig(save_k)
-            # np.save(save_k, prob_data_2D)
-            plt.show()
-
-        elif plot_what == 'z':
-            fig, ax = plt.subplots()
-            fig.suptitle(title, fontsize=14)
-
-            bar_width = 0.8 / x_r
-            ax.bar(x_c, mean_c, width=0.9*bar_width)
-            ax.axhline(y=y_calc, c='r', ls=':', label=label)
-            ax.set_title('Average FP-Probability of different symbol sizes z', fontdict=fontdict)
-            ax.grid()
-            ax.set_ylabel(y_label, fontsize=8)
-            ax.set_xlabel('Symbol Size z', fontsize=8)
-            ax.legend()
-
-            # plt.savefig(save_z)
-            # np.save(save_z, prob_data_2D)
-
-            plt.show()
-
-        elif plot_what == 'q':
-            fig, ax = plt.subplots()
-            fig.suptitle(title, fontsize=14)
-
-            bar_width = 0.8 / x_r
-            ax.bar(x_c, mean_c, width=0.9*bar_width)
-            ax.axhline(y=y_calc, c='r', ls=':', label=label)
-            ax.set_title('Average FP-Probability of different q-ary bases q', fontdict=fontdict)
-            ax.grid()
-            ax.set_ylabel(y_label, fontsize=8)
-            ax.set_xlabel('q-ary bases q', fontsize=8)
-            ax.legend()
-
-            # plt.savefig(save_q)
-            # np.save(save_q, prob_data_2D)
-
-            plt.show()
-
-        # mean_prob = np.array([mean_r, mean_c]) # if needed for further actions
-
-        # return mean_prob # if needed for further actions
-
     def plot_prob_multiple(self, data_rs, data_sha1, data_sha2, data_nc, plot_what):
         n = self.n
         z = self.z
@@ -810,22 +652,18 @@ class Plots:
         save = ''  # file name
         fontdict = {'fontsize': 9}  # font size of titles
         y_label = 'FP-Probability'
-        y_calc = 0.04
-        label = 'Calculated FP-Probability'
 
-        # if-clause for checking for equal dimensions
         num_rows = data_rs.shape[0]
         num_columns = data_rs.shape[1]
 
         x_r = np.array(self.convert_z_correct(z))
         x_c = np.arange(num_columns) + 1
 
+        y_calc = np.array([1 / np.power(2, i) for i in x_r]) # calculated average false positive probability (1/q)
+        label = 'Calculated FP-Probability for z = {}'.format(x_r[0]) # just z=8 relvant, others just return a value close to zero
+
         if plot_what == 'z':
             for i in range(num_rows):
-                data_rs = np.multiply(data_rs, 10)
-                data_sha1 = np.multiply(data_sha1, 10)
-                data_sha2 = np.multiply(data_sha2, 10)
-                data_nc = np.multiply(data_nc, 10)
                 fig, ax = plt.subplots()
                 fig.suptitle(title, fontsize=14)
                 bar_width = 0.2 / num_rows
@@ -833,14 +671,14 @@ class Plots:
                 ax.bar(x_c, data_sha1[i, :], width=0.9 * bar_width, label='SHA1')
                 ax.bar(x_c + bar_width, data_sha2[i, :], width=0.9 * bar_width, label='SHA2')
                 ax.bar(x_c + 2 * bar_width, data_nc[i, :], width=0.9 * bar_width, label='NC')
-                ax.axhline(y=y_calc, c='r', ls=':', label=label)
+                ax.axhline(y=[0], c='r', ls=':', label=label)
 
                 ax.set_title('FP-Probability for the symbol sizes z = {}'.format(x_r[i]), fontdict=fontdict)
                 ax.set_ylabel(y_label, fontsize=8)
                 ax.set_xlabel('n with k = 2^n', fontsize=8)
                 ax.grid()
                 ax.legend()
-                ax.set_xticks(x_c + (num_rows - 1) * bar_width / 2)
+                ax.set_xticks(x_c)
                 ax.set_xticklabels(x_c)
 
                 save = 'plot_prob_multiple_all_z={}.png'.format(x_r[i])
@@ -851,6 +689,8 @@ class Plots:
 
         elif plot_what == 'q':
             for i in range(num_rows):
+                print('labels_q: {}'.format(labels_q))
+                print('x_r = {}'.format(x_r))
                 fig, ax = plt.subplots()
                 fig.suptitle(title, fontsize=14)
                 bar_width = 0.2 / num_rows
@@ -858,7 +698,7 @@ class Plots:
                 ax.bar(x_c, data_sha1[i, :], width=0.9 * bar_width, label='SHA1')
                 ax.bar(x_c + bar_width, data_sha2[i, :], width=0.9 * bar_width, label='SHA2')
                 ax.bar(x_c + 2 * bar_width, data_nc[i, :], width=0.9 * bar_width, label='NC')
-                ax.axhline(y=y_calc, c='r', ls=':', label=label)
+                ax.axhline(y=y_calc[0], c='r', ls=':', label=label)
 
 
                 ax.set_title('FP-Probability for q-ary basis q = 2^{}'.format(x_r[i]), fontdict=fontdict)
@@ -866,7 +706,7 @@ class Plots:
                 ax.set_xlabel('Code word length k', fontsize=8)
                 ax.grid()
                 ax.legend()
-                ax.set_xticks(x_c + (num_rows - 1) * bar_width / 2)
+                ax.set_xticks(x_c)
                 ax.set_xticklabels(['$2^{{{}}}$'.format(b) for b in x_c])  # = labels_k
 
                 save = 'plot_prob_multiple_all_q=2^{}.png'.format(x_r[i])
@@ -884,14 +724,14 @@ class Plots:
                 ax.bar(x_r, data_sha1[:, j], width=0.9 * bar_width, label='SHA1')
                 ax.bar(x_r + bar_width, data_sha2[:, j], width=0.9 * bar_width, label='SHA2')
                 ax.bar(x_r + 2 * bar_width, data_nc[:, j], width=0.9 * bar_width, label='NC')
-                ax.axhline(y=y_calc, c='r', ls=':', label=label)
+                ax.axhline(y=y_calc[0], c='r', ls=':', label=label)
 
                 ax.set_title('FP-Probability for different code lengths n = {}'.format(x_c[j]), fontdict=fontdict)
                 ax.set_ylabel(y_label, fontsize=8)
                 ax.set_xlabel('Symbol size z', fontsize=8)
                 ax.grid()
                 ax.legend()
-                ax.set_xticks(x_r + (num_columns - 1) * bar_width / 2)
+                ax.set_xticks(x_r)
                 ax.set_xticklabels(x_r)
 
                 save = 'plot_prob_multiple_all_n={}.png'.format(x_c[j])
@@ -909,14 +749,15 @@ class Plots:
                 ax.bar(x_r, data_sha1[:, j], width=0.9 * bar_width, label='SHA1')
                 ax.bar(x_r + bar_width, data_sha2[:, j], width=0.9 * bar_width, label='SHA2')
                 ax.bar(x_r + 2 * bar_width, data_nc[:, j], width=0.9 * bar_width, label='NC')
-                ax.axhline(y=y_calc, c='r', ls=':', label=label)
+                ax.axhline(y=y_calc[0], c='r', ls=':', label=label)
 
                 ax.set_title('FP-Probability for code word lengths k = 2^{}'.format(x_c[j]), fontdict=fontdict)
                 ax.set_ylabel(y_label, fontsize=8)
                 ax.set_xlabel('q-ary basis q', fontsize=8)
                 ax.grid()
                 ax.legend()
-                ax.set_xticks(x_r + (num_columns - 1) * bar_width / 2)
+                ax.set_xticks(x_r)
+                # ax.set_xticks(x_r + (num_columns - 1) * bar_width / 2)
                 ax.set_xticklabels(['$2^{{{}}}$'.format(b) for b in x_r])
 
                 save = 'plot_prob_multiple_all_k=2^{}.png'.format(x_c[j])
@@ -949,8 +790,6 @@ class Plots:
             save_n = 'RS_Prob_SameN_DiffZ.png'
             save_q = 'RS_Prob_SameQ_DiffK.png'
             save_k = 'RS_Prob_SameK_DiffQ.png'
-            label = 'Calculated FP-Probability RS'
-            y_calc = 0.004 #@Ed richtigen wert bitte einfügen
         elif alg == 'sha1':
             title_bp = 'Boxplot FP-Probability of Sha1'
             title_vp = 'Violinplot FP-Probability of Sha1'
@@ -958,8 +797,6 @@ class Plots:
             save_n = 'SHA1_Prob_SameN_DiffZ.png'
             save_q = 'SHA1_Prob_SameQ_DiffK.png'
             save_k = 'SHA1_Prob_SameK_DiffQ.png'
-            label = 'Calculated FP-Probability SHA1'
-            y_calc = 0.004 #@Ed richtigen wert bitte einfügen
         elif alg == 'sha2':
             title_bp = 'Boxplot FP-Probability of Sha2'
             title_vp = 'Violinplot FP-Probability of Sha2'
@@ -967,8 +804,6 @@ class Plots:
             save_n = 'SHA2_Prob_SameN_DiffZ.png'
             save_q = 'SHA2_Prob_SameQ_DiffK.png'
             save_k = 'SHA2_Prob_SameK_DiffQ.png'
-            label = 'Calculated FP-Probability SHA2'
-            y_calc = 0.004 #@Ed richtigen wert bitte einfügen
         elif alg == 'nc':
             title_bp = 'Boxplot FP-Probability of No Code'
             title_vp = 'Violinplot FP-Probability of No Code'
@@ -976,8 +811,6 @@ class Plots:
             save_n = 'NC_Prob_SameN_DiffZ.png'
             save_q = 'NC_Prob_SameQ_DiffK.png'
             save_k = 'NC_Prob_SameK_DiffQ.png'
-            label = 'Calculated FP-Probability NC'
-            y_calc = 0.004 #@Ed richtigen wert bitte einfügen
 
         num_rows = prob_data_3D.shape[0]
         num_columns = prob_data_3D.shape[1]
@@ -1005,7 +838,7 @@ class Plots:
                     whiskerprops={"color": "C0", "linewidth": 1.5},
                     capprops={"color": "C0", "linewidth": 1.5})
 
-                #ax.axhline(y=y_calc, c='r', ls=':', label=label)
+                #ax.axhline(y=y_calc[0], c='r', ls=':', label=label)
                 subtitle = 'FP-Probability for different symbol sizes z = ' + ', '.join(['{}'.format(x_r[i])])
                 ax.set_title(subtitle, fontdict=fontdict)
                 ax.set_ylabel(y_label, fontsize=8)
@@ -1024,7 +857,7 @@ class Plots:
                 fig.suptitle(title_vp, fontsize=14)
 
                 ax.violinplot(arr2D.T, showmeans=True, showmedians=False, showextrema=False)
-                #ax.axhline(y=y_calc, c='r', ls=':', label=label)
+                #ax.axhline(y=y_calc[0], c='r', ls=':', label=label)
                 subtitle = 'FP-Probability for different symbol sizes z = ' + ', '.join(['{}'.format(x_r[i])])
                 ax.set_title(subtitle, fontdict=fontdict)
                 ax.set_ylabel(y_label, fontsize=8)
@@ -1058,7 +891,7 @@ class Plots:
                            whiskerprops={"color": "C0", "linewidth": 1.5},
                            capprops={"color": "C0", "linewidth": 1.5})
 
-                #ax.axhline(y=y_calc, c='r', ls=':', label=label)
+                #ax.axhline(y=y_calc[0], c='r', ls=':', label=label)
                 suptitel = 'FP-Probability for different q-ary bases q = ' + ', '.join(['2^{}'.format(b) for b in x_r])
                 ax.set_title(suptitel, fontdict=fontdict)
                 ax.set_ylabel(y_label, fontsize=8)
@@ -1077,7 +910,7 @@ class Plots:
                 fig.suptitle(title_vp, fontsize=14)
 
                 ax.violinplot(arr2D.T, showmeans=True, showmedians=False, showextrema=False)
-                # ax.axhline(y=y_calc, c='r', ls=':', label=label)
+                # ax.axhline(y=y_calc[0], c='r', ls=':', label=label)
                 suptitel = 'FP-Probability for different q-ary bases q = ' + ', '.join(['2^{}'.format(b) for b in x_r])
                 ax.set_title(suptitel, fontdict=fontdict)
                 ax.set_ylabel(y_label, fontsize=8)
@@ -1111,7 +944,7 @@ class Plots:
                            whiskerprops={"color": "C0", "linewidth": 1.5},
                            capprops={"color": "C0", "linewidth": 1.5})
 
-                #ax.axhline(y=y_calc, c='r', ls=':', label=label)
+                #ax.axhline(y=y_calc[0], c='r', ls=':', label=label)
                 subtitle = 'FP-Probability for different n = ' + ', '.join(['{}'.format(b) for b in x_c])
                 ax.set_title(subtitle, fontdict=fontdict)
                 ax.set_ylabel(y_label, fontsize=8)
@@ -1130,7 +963,7 @@ class Plots:
                 fig.suptitle(title_vp, fontsize=14)
 
                 ax.violinplot(arr2D.T, showmeans=True, showmedians=False, showextrema=False)
-                # ax.axhline(y=y_calc, c='r', ls=':', label=label)
+                # ax.axhline(y=y_calc[0], c='r', ls=':', label=label)
                 subtitle = 'FP-Probability for different n = ' + ', '.join(['{}'.format(b) for b in x_c])
                 ax.set_title(subtitle, fontdict=fontdict)
                 ax.set_ylabel(y_label, fontsize=8)
@@ -1165,7 +998,7 @@ class Plots:
                        whiskerprops={"color": "C0", "linewidth": 1.5},
                        capprops={"color": "C0", "linewidth": 1.5})
 
-            #ax.axhline(y=y_calc, c='r', ls=':', label=label)
+            #ax.axhline(y=y_calc[0], c='r', ls=':', label=label)
             subtitle = "FP-Probability for different code word lengths k = " + ', '.join(['2^{}'.format(b) for b in x_c])
             ax.set_title(subtitle, fontdict=fontdict)
             ax.set_ylabel(y_label, fontsize=8)
@@ -1184,7 +1017,7 @@ class Plots:
             fig.suptitle(title_vp, fontsize=14)
 
             ax.violinplot(arr2D.T, showmeans=True, showmedians=False, showextrema=False)
-            # ax.axhline(y=y_calc, c='r', ls=':', label=label)
+            # ax.axhline(y=y_calc[0], c='r', ls=':', label=label)
             subtitle = "FP-Probability for different code word lengths k = " + ', '.join(
                 ['2^{}'.format(b) for b in x_c])
             ax.set_title(subtitle, fontdict=fontdict)
@@ -1372,8 +1205,6 @@ class Plots:
             save_n = 'NC_Prob_Var_SameN_DiffZ.png'
             save_q = 'NC_Prob_Var_SameQ_DiffK.png'
             save_k = 'NC_Prob_Var_SameK_DiffQ.png'
-            label = 'Calculated FP-Probability SHA2'
-            y_calc = 0.004 #@Ed richtigen wert bitte einfügen
         elif alg == 'nc':
             prob_var_rows = np.var(prob_data_2D.T, axis=0)
             prob_var_cols = np.var(prob_data_2D, axis=0)
@@ -1613,3 +1444,45 @@ class Plots:
             # np.save(save_k, prob_std_cols)
 
             plt.show()
+
+    def plot_datasize(self):
+        n_index = self.n
+        z_index = self.z
+        zTmp = np.array(self.convert_z_correct(z_index))
+        z = zTmp.astype(np.float32)
+        q = self.convert_z_to_q(z)
+        k = np.array(self.convert_n_to_k(n_index))
+
+        num_rows = z_index
+        x_cTmp = np.arange(n_index) + 1
+        x_c = x_cTmp[::2]
+
+        bar_width = 0.6 / num_rows
+
+        if np.max(z+1) >= np.max(x_c):
+            max = np.max(z+1)
+        else:
+            max = np.max(x_c + 1)
+
+        print(max)
+        yticks = np.arange(max).astype(int)
+        yticks_small = yticks[::2]
+
+        fig, ax = plt.subplots()
+        fig.suptitle('Data Size')
+        ax.bar(x_c - 1 * bar_width, x_c, width=bar_width, label='Original')
+        ax.bar(x_c, z[0], width=bar_width, label='z = 8')
+        ax.bar(x_c + 1 * bar_width, z[1], width=bar_width, label='z = 16')
+        ax.bar(x_c + 2 * bar_width, z[2], width=bar_width, label='z = 32')
+
+        ax.set_ylabel('Datasize in bit')
+        ax.set_yticks(yticks_small)
+        ax.set_yticklabels(['$2^{{{}}}$'.format(b) for b in yticks_small])
+
+        ax.set_xlabel('Message size in bit')
+        ax.set_xticks(x_c)
+        ax.set_xticklabels(['$2^{{{}}}$'.format(b) for b in x_c])  # = labels_k
+
+        ax.grid()
+        ax.legend()
+        plt.show()
