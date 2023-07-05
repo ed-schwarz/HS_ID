@@ -659,6 +659,8 @@ class Plots:
         x_r = np.array(self.convert_z_correct(z))
         x_c = np.arange(num_columns) + 1
 
+        print(x_r)
+
         y_calc = np.array([1 / np.power(2, i) for i in x_r]) # calculated average false positive probability (1/q)
         label = 'Calculated FP-Probability for z = {}'.format(x_r[0]) # just z=8 relvant, others just return a value close to zero
 
@@ -749,7 +751,10 @@ class Plots:
                 ax.bar(x_r, data_sha1[:, j], width=0.9 * bar_width, label='SHA1')
                 ax.bar(x_r + bar_width, data_sha2[:, j], width=0.9 * bar_width, label='SHA2')
                 ax.bar(x_r + 2 * bar_width, data_nc[:, j], width=0.9 * bar_width, label='NC')
-                ax.axhline(y=y_calc[0], c='r', ls=':', label=label)
+                # ax.axhline(y=y_calc[0], c='r', ls=':', label=label)
+                ax.scatter(x_r[0], y_calc[0], c='r', label='Calculated FP-Probability 1/q')
+                ax.scatter(x_r[1], y_calc[1], c='r')
+                ax.scatter(x_r[2], y_calc[2], c='r')
 
                 ax.set_title('FP-Probability for code word lengths k = 2^{}'.format(x_c[j]), fontdict=fontdict)
                 ax.set_ylabel(y_label, fontsize=8)
@@ -757,7 +762,6 @@ class Plots:
                 ax.grid()
                 ax.legend()
                 ax.set_xticks(x_r)
-                # ax.set_xticks(x_r + (num_columns - 1) * bar_width / 2)
                 ax.set_xticklabels(['$2^{{{}}}$'.format(b) for b in x_r])
 
                 save = 'plot_prob_multiple_all_k=2^{}.png'.format(x_c[j])
