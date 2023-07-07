@@ -29,7 +29,7 @@ class Plots:
             elif(i == 1):
                 z_r.append(16)
             elif(i == 2):
-                z_r.append(32)
+                z_r.append(32.0)
                 
         return z_r 
 
@@ -119,13 +119,13 @@ class Plots:
             if plot_how_many == 'all':
                 for i in range(num_rows):
                     bar_position = x_c + i * bar_width
-                    ax.bar(bar_position, prob_data_2D[i, :], width=bar_width, label='q = 2^{}'.format(x_r[i]))
+                    ax.bar(bar_position, prob_data_2D[i, :], width=bar_width, label='q = 2 ^ {}'.format(x_r[i]))
                 ax.set_title('FP-Probability for different q-ary bases', fontdict=fontdict)
             else:  # plot q for a single k
                 bar_position = x_c + (num_rows - 1) * bar_width / 2
                 ax.bar(bar_position, prob_data_2D[plot_how_many, :], width=bar_width,
-                       label='q = 2^{}'.format(x_r[plot_how_many]))
-                ax.set_title('FP-Probability for q-ary basis q = 2^{}'.format(x_r[plot_how_many]), fontdict=fontdict)
+                       label='q = 2 ^ {}'.format(x_r[plot_how_many]))
+                ax.set_title('FP-Probability for q-ary basis q = 2 ^ {}'.format(x_r[plot_how_many]), fontdict=fontdict)
 
             ax.axhline(y=y_calc[0], c='r', ls=':', label=label)
             ax.set_ylabel(y_label, fontsize=8)
@@ -175,11 +175,11 @@ class Plots:
             if plot_how_many == 'all':
                 for j in range(num_columns):
                     bar_position = x_r + j * bar_width
-                    ax.bar(bar_position, prob_data_2D[:, j], width=bar_width, label='k = 2^{}'.format(j + 1))
+                    ax.bar(bar_position, prob_data_2D[:, j], width=bar_width, label='k = 2 ^ {}'.format(j + 1))
                 ax.set_title('FP-Probability for different code word lengths k', fontdict=fontdict)
             else:
                 bar_position = x_r + (num_columns - 1) * bar_width / 2  # equals xticks
-                ax.bar(bar_position, prob_data_2D[:, plot_how_many], width=6 * bar_width, label='k = 2^{}'.format(plot_how_many + 1))
+                ax.bar(bar_position, prob_data_2D[:, plot_how_many], width=6 * bar_width, label='k = 2 ^ {}'.format(plot_how_many + 1))
                 ax.set_title('FP-Probability for code word lengths k = 2^{}'.format(plot_how_many + 1), fontdict=fontdict)
 
             ax.axhline(y=y_calc[0], c='r', ls=':', label=label)
@@ -280,13 +280,13 @@ class Plots:
             if plot_how_many == 'all':
                 for i in range(num_rows):
                     bar_position = x_cpos + i * bar_width
-                    ax.bar(bar_position, prob_data_2D[i, :], width=0.9*bar_width, label='q = 2^{}'.format(x_r[i]))
+                    ax.bar(bar_position, prob_data_2D[i, :], width=0.9*bar_width, label='q = 2 ^ {}'.format(x_r[i]))
                 ax.set_title('Calculation Time for different q-ary bases', fontdict=fontdict)
             else:  # plot q for a single k
                 bar_position = x_c + (num_rows - 1) * bar_width / 2
                 ax.bar(bar_position, prob_data_2D[plot_how_many, :], width=bar_width,
-                       label='q = 2^{}'.format(x_r[plot_how_many]))
-                ax.set_title('Calculation Time for q-ary basis q = 2^{}'.format(x_r[plot_how_many]), fontdict=fontdict)
+                       label='q = 2 ^ {}'.format(x_r[plot_how_many]))
+                ax.set_title('Calculation Time for q-ary basis q = 2 ^ {}'.format(x_r[plot_how_many]), fontdict=fontdict)
 
             ax.set_ylabel(y_label, fontsize=8)
             ax.set_xlabel('Code word length k', fontsize=8)
@@ -337,8 +337,8 @@ class Plots:
                 ax.set_title('Calculation Time for different code word lengths k', fontdict=fontdict)
             else:
                 bar_position = x_r + (num_columns - 1) * bar_width / 2  # equals xticks
-                ax.bar(bar_position, prob_data_2D[:, plot_how_many], width=6 * bar_width, label='k = 2^{}'.format(plot_how_many + 1))
-                ax.set_title('Calculation Time for code word lengths k = 2^{}'.format(plot_how_many + 1), fontdict=fontdict)
+                ax.bar(bar_position, prob_data_2D[:, plot_how_many], width=6 * bar_width, label='k = 2 ^ {}'.format(plot_how_many + 1))
+                ax.set_title('Calculation Time for code word lengths k = 2 ^ {}'.format(plot_how_many + 1), fontdict=fontdict)
 
             ax.set_ylabel(y_label, fontsize=8)
             ax.set_xlabel('q-ary basis q', fontsize=8)
@@ -436,13 +436,13 @@ class Plots:
             if plot_how_many == 'all':
                 for i in range(num_rows):
                     bar_position = x_cpos + i * bar_width
-                    ax.bar(bar_position, prob_data_2D[i, :], width=bar_width, label='q = 2^{}'.format(x_r[i]))
+                    ax.bar(bar_position, prob_data_2D[i, :], width=bar_width, label='q = 2 ^ {}'.format(x_r[i]))
                 ax.set_title('Calculation Thrpt for different q-ary bases', fontdict=fontdict)
             else:  # plot q for a single k
                 bar_position = x_c + (num_rows - 1) * bar_width / 2
                 ax.bar(bar_position, prob_data_2D[plot_how_many, :], width=bar_width,
-                       label='q = 2^{}'.format(x_r[plot_how_many]))
-                ax.set_title('Calculation Thrpt for q-ary basis q = 2^{}'.format(x_r[plot_how_many]), fontdict=fontdict)
+                       label='q = 2 ^ {}'.format(x_r[plot_how_many]))
+                ax.set_title('Calculation Thrpt for q-ary basis q = 2 ^ {}'.format(x_r[plot_how_many]), fontdict=fontdict)
 
             ax.set_ylabel(y_label, fontsize=8)
             ax.set_xlabel('Code word length k', fontsize=8)
@@ -489,12 +489,12 @@ class Plots:
             if plot_how_many == 'all':
                 for j in range(num_columns):
                     bar_position = x_r + j * bar_width
-                    ax.bar(bar_position, prob_data_2D[:, j], width=0.9*bar_width, label='k = 2^{}'.format(j + 1))
+                    ax.bar(bar_position, prob_data_2D[:, j], width=0.9*bar_width, label='k = 2 ^ {}'.format(j + 1))
                 ax.set_title('Calculation Thrpt for different code word lengths k', fontdict=fontdict)
             else:
                 bar_position = x_r + (num_columns - 1) * bar_width / 2  # equals xticks
-                ax.bar(bar_position, prob_data_2D[:, plot_how_many], width=6 * bar_width, label='k = 2^{}'.format(plot_how_many + 1))
-                ax.set_title('Calculation Thrpt for code word lengths k = 2^{}'.format(plot_how_many + 1), fontdict=fontdict)
+                ax.bar(bar_position, prob_data_2D[:, plot_how_many], width=6 * bar_width, label='k = 2 ^ {}'.format(plot_how_many + 1))
+                ax.set_title('Calculation Thrpt for code word lengths k = 2 ^ {}'.format(plot_how_many + 1), fontdict=fontdict)
 
             ax.set_ylabel(y_label, fontsize=8)
             ax.set_xlabel('q-ary bases q', fontsize=8)
@@ -664,6 +664,8 @@ class Plots:
         y_calc = np.array([1 / np.power(2, i) for i in x_r]) # calculated average false positive probability (1/q)
         label = 'Calculated FP-Probability for z = {}'.format(x_r[0]) # just z=8 relvant, others just return a value close to zero
 
+        print(y_calc)
+
         if plot_what == 'z':
             for i in range(num_rows):
                 fig, ax = plt.subplots()
@@ -695,7 +697,7 @@ class Plots:
                 print('x_r = {}'.format(x_r))
                 fig, ax = plt.subplots()
                 fig.suptitle(title, fontsize=14)
-                bar_width = 0.2 / num_rows
+                bar_width = 0.4 / num_rows
                 ax.bar(x_c - bar_width, data_rs[i, :], width=0.9 * bar_width, label='RS')
                 ax.bar(x_c, data_sha1[i, :], width=0.9 * bar_width, label='SHA1')
                 ax.bar(x_c + bar_width, data_sha2[i, :], width=0.9 * bar_width, label='SHA2')
@@ -703,13 +705,13 @@ class Plots:
                 ax.axhline(y=y_calc[0], c='r', ls=':', label=label)
 
 
-                ax.set_title('FP-Probability for q-ary basis q = 2^{}'.format(x_r[i]), fontdict=fontdict)
+                ax.set_title('FP-Probability for q-ary basis q = 2 ^ {}'.format(x_r[i]), fontdict=fontdict)
                 ax.set_ylabel(y_label, fontsize=8)
                 ax.set_xlabel('Code word length k', fontsize=8)
                 ax.grid()
                 ax.legend()
-                ax.set_xticks(x_c)
-                ax.set_xticklabels(['$2^{{{}}}$'.format(b) for b in x_c])  # = labels_k
+                ax.set_xticks(x_c[::3]) # plots only every third element of the x-axis scale
+                ax.set_xticklabels(['$2^{{{}}}$'.format(b) for b in x_c[::3]])  # = labels_k
 
                 save = 'plot_prob_multiple_all_q=2^{}.png'.format(x_r[i])
                 plt.savefig(save)
@@ -746,7 +748,7 @@ class Plots:
             for j in range(num_columns):
                 fig, ax = plt.subplots()
                 fig.suptitle(title, fontsize=14)
-                bar_width = 0.8 / num_rows
+                bar_width = 1.6 / num_rows
                 ax.bar(x_r - bar_width, data_rs[:, j], width=0.9 * bar_width, label='RS')
                 ax.bar(x_r, data_sha1[:, j], width=0.9 * bar_width, label='SHA1')
                 ax.bar(x_r + bar_width, data_sha2[:, j], width=0.9 * bar_width, label='SHA2')
@@ -756,13 +758,14 @@ class Plots:
                 ax.scatter(x_r[1], y_calc[1], c='r')
                 ax.scatter(x_r[2], y_calc[2], c='r')
 
-                ax.set_title('FP-Probability for code word lengths k = 2^{}'.format(x_c[j]), fontdict=fontdict)
+                ax.set_title('FP-Probability for code word lengths k = 2 ^ {}'.format(x_c[j]), fontdict=fontdict)
                 ax.set_ylabel(y_label, fontsize=8)
                 ax.set_xlabel('q-ary basis q', fontsize=8)
                 ax.grid()
                 ax.legend()
                 ax.set_xticks(x_r)
                 ax.set_xticklabels(['$2^{{{}}}$'.format(b) for b in x_r])
+                ax.set_yscale('log')
 
                 save = 'plot_prob_multiple_all_k=2^{}.png'.format(x_c[j])
                 plt.savefig(save)
@@ -896,7 +899,7 @@ class Plots:
                            capprops={"color": "C0", "linewidth": 1.5})
 
                 #ax.axhline(y=y_calc[0], c='r', ls=':', label=label)
-                suptitel = 'FP-Probability for different q-ary bases q = ' + ', '.join(['2^{}'.format(b) for b in x_r])
+                suptitel = 'FP-Probability for different q-ary bases q = ' + ', '.join(['2 ^ {}'.format(b) for b in x_r])
                 ax.set_title(suptitel, fontdict=fontdict)
                 ax.set_ylabel(y_label, fontsize=8)
                 ax.set_xlabel('Code word length k', fontsize=8)
@@ -915,7 +918,7 @@ class Plots:
 
                 ax.violinplot(arr2D.T, showmeans=True, showmedians=False, showextrema=False)
                 # ax.axhline(y=y_calc[0], c='r', ls=':', label=label)
-                suptitel = 'FP-Probability for different q-ary bases q = ' + ', '.join(['2^{}'.format(b) for b in x_r])
+                suptitel = 'FP-Probability for different q-ary bases q = ' + ', '.join(['2 ^ {}'.format(b) for b in x_r])
                 ax.set_title(suptitel, fontdict=fontdict)
                 ax.set_ylabel(y_label, fontsize=8)
                 ax.set_xlabel('Code word length k', fontsize=8)
@@ -1003,7 +1006,7 @@ class Plots:
                        capprops={"color": "C0", "linewidth": 1.5})
 
             #ax.axhline(y=y_calc[0], c='r', ls=':', label=label)
-            subtitle = "FP-Probability for different code word lengths k = " + ', '.join(['2^{}'.format(b) for b in x_c])
+            subtitle = "FP-Probability for different code word lengths k = " + ', '.join(['2 ^ {}'.format(b) for b in x_c])
             ax.set_title(subtitle, fontdict=fontdict)
             ax.set_ylabel(y_label, fontsize=8)
             ax.set_xlabel('q-ary basis q', fontsize=8)
@@ -1023,7 +1026,7 @@ class Plots:
             ax.violinplot(arr2D.T, showmeans=True, showmedians=False, showextrema=False)
             # ax.axhline(y=y_calc[0], c='r', ls=':', label=label)
             subtitle = "FP-Probability for different code word lengths k = " + ', '.join(
-                ['2^{}'.format(b) for b in x_c])
+                ['2 ^ {}'.format(b) for b in x_c])
             ax.set_title(subtitle, fontdict=fontdict)
             ax.set_ylabel(y_label, fontsize=8)
             ax.set_xlabel('q-ary basis q', fontsize=8)
@@ -1252,7 +1255,7 @@ class Plots:
             bar_width = 0.8 / num_rows
             for i in range(num_rows):
                 bar_position = x_c + i * bar_width
-                ax.bar(bar_position, prob_var_rows[i], width=bar_width, label='q = 2^{}'.format(x_r[i]))
+                ax.bar(bar_position, prob_var_rows[i], width=bar_width, label='q = 2 ^ {}'.format(x_r[i]))
             ax.set_title('Variance for different q-ary bases', fontdict=fontdict)
             ax.set_ylabel(y_label, fontsize=8)
             ax.set_xlabel('Code word length k', fontsize=8)
@@ -1293,7 +1296,7 @@ class Plots:
             bar_width = 0.8 / num_columns
             for j in range(num_columns):
                 bar_position = x_r + j * bar_width
-                ax.bar(bar_position, prob_var_cols[j], width=bar_width, label='k = 2^{}'.format(j + 1))
+                ax.bar(bar_position, prob_var_cols[j], width=bar_width, label='k = 2 ^ {}'.format(j + 1))
             ax.set_title('Variance for different code word lengths k', fontdict=fontdict)
             ax.set_ylabel(y_label, fontsize=8)
             ax.set_xlabel('q-ary basis q', fontsize=8)
@@ -1394,7 +1397,7 @@ class Plots:
             bar_width = 0.8 / num_rows
             for i in range(num_rows):
                 bar_position = x_c + i * bar_width
-                ax.bar(bar_position, prob_std_rows[i], width=bar_width, label='q = 2^{}'.format(x_r[i]))
+                ax.bar(bar_position, prob_std_rows[i], width=bar_width, label='q = 2 ^ {}'.format(x_r[i]))
             ax.set_title('Standard Deviation for different q-ary bases', fontdict=fontdict)
             ax.set_ylabel(y_label, fontsize=8)
             ax.set_xlabel('Code word length k', fontsize=8)
@@ -1435,7 +1438,7 @@ class Plots:
             bar_width = 0.8 / num_columns
             for j in range(num_columns):
                 bar_position = x_r + j * bar_width
-                ax.bar(bar_position, prob_std_cols[j], width=bar_width, label='k = 2^{}'.format(j + 1))
+                ax.bar(bar_position, prob_std_cols[j], width=bar_width, label='k = 2 ^ {}'.format(j + 1))
             ax.set_title('Standard Deviation for different code word lengths k', fontdict=fontdict)
             ax.set_ylabel(y_label, fontsize=8)
             ax.set_xlabel('q-ary basis q', fontsize=8)
