@@ -5,7 +5,16 @@ import itertools
 import tkinter
 import matplotlib as mpl
 
-mpl.use('TkAgg')
+#mpl.use('TkAgg')
+mpl.use("pgf")
+
+mpl.rcParams.update({
+    "pgf.texsystem": "pdflatex",
+    'font.family': 'serif',
+    'font.size' : 11,
+    'text.usetex': True,
+    'pgf.rcfonts': False,
+})
 
 
 class Plots:
@@ -1464,7 +1473,7 @@ class Plots:
         x_cTmp = np.arange(n_index) + 1
         x_c = x_cTmp[::4]
 
-        bar_width = 0.6 / num_rows
+        bar_width = 1.6 / num_rows
 
         if np.max(z+1) >= np.max(x_c):
             max = np.max(z+1)
@@ -1492,4 +1501,5 @@ class Plots:
 
         ax.grid()
         ax.legend()
-        plt.show()
+        plt.savefig('datasize1.pgf')
+        #plt.show()
