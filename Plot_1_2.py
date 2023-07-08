@@ -1462,7 +1462,7 @@ class Plots:
 
         num_rows = z_index
         x_cTmp = np.arange(n_index) + 1
-        x_c = x_cTmp[::2]
+        x_c = x_cTmp[::4]
 
         bar_width = 0.6 / num_rows
 
@@ -1473,7 +1473,7 @@ class Plots:
 
         print(max)
         yticks = np.arange(max).astype(int)
-        yticks_small = yticks[::2]
+        yticks_small = yticks[::4]
 
         fig, ax = plt.subplots()
         fig.suptitle('Data Size')
